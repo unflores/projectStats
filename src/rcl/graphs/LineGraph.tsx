@@ -1,26 +1,37 @@
 import { ResponsiveLine } from '@nivo/line'
 
 
-type LineGraphData = {
+type Line = {
   id: string;
   color: string;
   data: {
-    x: string;
+    x: string | number;
     y: number;
   }[];
-}[];
+};
 
 interface Props {
-  data: LineGraphData;
+  lines: Line[];
   xLabel?: string;
   yLabel?: string;
   className?: string;
 }
 
-const LineGraph = ({ data, className, xLabel, yLabel }: Props) => (
-  <div className={className}>
+const LineGraph = ({ lines, className, xLabel, yLabel }: Props) => {
+  const avg = lines[0].data.reduce((sum, atts) => atts.y + sum, 0) / lines[0].data.length
+
+  return (< div className={className} >
     <ResponsiveLine
-      data={data}
+      markers={[{
+        axis: 'y',
+        value: avg.toFixed(2),
+        lineStyle: { stroke: '#b0b0b0', strokeWidth: 2, zIndex: 99999 },
+        legend: `Mean ${avg.toFixed(2)}`,
+        legendPosition: 'top-right',
+
+      }]}
+      layers={['grid', 'axes', 'areas', 'crosshair', 'lines', 'markers', 'points', 'slices', 'mesh', 'legends']}
+      data={lines}
       margin={{ top: 50, right: 110, bottom: 50, left: 60 }}
       xScale={{ type: 'point' }}
       yScale={{
@@ -51,6 +62,8 @@ const LineGraph = ({ data, className, xLabel, yLabel }: Props) => (
         legendPosition: 'middle',
         truncateTickAt: 0
       }}
+
+
       lineWidth={6}
       pointSize={8}
       pointColor={{ theme: 'background' }}
@@ -58,10 +71,10 @@ const LineGraph = ({ data, className, xLabel, yLabel }: Props) => (
       pointBorderColor={{ from: 'serieColor' }}
       pointLabel="data.yFormatted"
       pointLabelYOffset={-12}
-      enableArea={true}
-      areaOpacity={0.1}
+      enableArea={false}
+
       enableTouchCrosshair={true}
-      useMesh={true}
+      useMesh={false}
       legends={[
         {
           anchor: 'bottom-right',
@@ -77,19 +90,10 @@ const LineGraph = ({ data, className, xLabel, yLabel }: Props) => (
           symbolSize: 12,
           symbolShape: 'circle',
           symbolBorderColor: 'rgba(0, 0, 0, .5)',
-          effects: [
-            {
-              on: 'hover',
-              style: {
-                itemBackground: 'rgba(0, 0, 0, .03)',
-                itemOpacity: 1
-              }
-            }
-          ]
         }
       ]}
     />
-  </div>
-);
+  </div >);
+};
 
 export default LineGraph;
