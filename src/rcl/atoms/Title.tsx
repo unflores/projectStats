@@ -2,7 +2,7 @@ import cn from "classnames";
 
 
 const levelClasses = (level: number) => {
-  switch(level){
+  switch (level) {
     case 1:
       return "my-2 text-2xl leading-9 tracking-tight lg:text-3xl"
     case 2:
@@ -27,7 +27,7 @@ interface Props {
   title?: string;
 }
 
-function Title({ className, level = 1, children, id, title }: Props) {
+const Title = ({ className, level = 1, children, id, title }: Props) => {
   const CustomTag: any = `h${level}`;
 
   return (
