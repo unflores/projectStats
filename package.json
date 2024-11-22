@@ -6,11 +6,13 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "occurances:fetch": "npx ts-node ./src/scripts/occurances/fetch.ts"
   },
   "dependencies": {
     "@carbon/icons-react": "^11.52.0",
     "@headlessui/react": "^2.0.4",
+    "@nivo/line": "^0.88.0",
     "@tmcw/togeojson": "^5.8.1",
     "classnames": "^2.5.1",
     "eslint-plugin-next": "^0.0.0",
@@ -24,7 +26,9 @@
     "react-dom": "^18",
     "react-dropzone": "^14.2.3",
     "react-i18next": "^14.1.2",
-    "xmldom": "^0.6.0"
+    "ts-node": "^10.9.2",
+    "xmldom": "^0.6.0",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@types/classnames": "^2.3.1",
