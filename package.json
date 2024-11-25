@@ -44,5 +44,6 @@
     "postcss": "^8.4.49",
     "tailwindcss": "^3.4.14",
     "typescript": "^5"
-  }
+  },
+  "packageManager": "pnpm@10.0.0-alpha.4+sha512.a766482ed7e5802db8966144e1de4918a71bc6b0f11d65d21fc719ce23fe6af38f527ae3b97e826f2378126f620b4d8950d1a990862c8666506cff017ee1d4cc"
 }
