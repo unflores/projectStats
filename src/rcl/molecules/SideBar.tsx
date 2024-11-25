@@ -1,39 +1,36 @@
+"use client";
 import cn from "classnames";
 import Link from "next/link";
-import { useRouter } from "next/router";
+import { usePathname } from "next/navigation";
 
 import RouteItem from "./RouteItem";
 
 export type Route = {
   name: string;
   href: string;
-  isActive: (route: string) => boolean;
+  isActive: (route: string | null) => boolean;
   Icon: React.FC<{ className?: string; ariaHidden?: string }>;
-}
+};
 
 interface Props {
   navigation: Route[];
-
   className?: string;
 }
 
 const SideBar = ({ navigation, className }: Props) => {
-  const router = useRouter();
+  const pathname = usePathname();
   return (
-    <div className={cn("fixed z-40 min-h-screen no-print", className)}>
+    <div className={cn("px-5 fixed z-40 min-h-screen no-print", className)}>
       <div
-        className={cn(
-          "flex flex-col transition-all duration-200 ease-in-out bg-white border-r border-gray-200 w-[232px]",
-        )}
+        className={
+          "flex flex-col transition-all duration-200 ease-in-out bg-white border-r border-gray-200 w-[10rem]"
+        }
       >
         <div className="flex flex-col flex-1">
           <div className="h-16 p-5">
             <div className="relative h-5 overflow-hidden">
-
-              <Link href="/">
-                <a className={cn("absolute block w-[134px] h-5", { invisible: !menuOpen })}>
-                  Logo
-                </a>
+              <Link className={cn("absolute block w-[134px] h-5")} href="/">
+                Projects
               </Link>
             </div>
           </div>
@@ -44,9 +41,8 @@ const SideBar = ({ navigation, className }: Props) => {
                 key={href}
                 name={name}
                 href={href}
-                active={isActive(router.pathname)}
+                active={isActive(pathname)}
                 Icon={Icon}
-                menuOpen={menuOpen}
               />
             ))}
           </nav>
