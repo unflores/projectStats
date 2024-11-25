@@ -1,0 +1,19 @@
+version: "3.9"
+volumes:
+  project-knowledge-data:
+    external: false
+
+services:
+  db:
+    build:
+      context: "."
+      dockerfile: ./docker/postgres/DockerFile
+    volumes:
+      - project-knowledge-data:/var/lib/postgresql/data
+    container_name: project-knowledge-database
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: pkfire
+      POSTGRES_PASSWORD: pkfire
+      DATABASES: development,test
