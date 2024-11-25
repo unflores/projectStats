@@ -3,7 +3,6 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import SideBar from "@/rcl/molecules/SideBar";
 import type { Route } from "@/rcl/molecules/SideBar";
-import cn from "classnames";
 
 const inter = Inter({ subsets: ["latin"] });
 
