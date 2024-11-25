@@ -19,6 +19,8 @@ model Project {
   updatedAt DateTime @updatedAt
   occurances Occurance[]
   name      String
+
+  @@map("projects")
 }
 
 model Occurance {
@@ -29,4 +31,8 @@ model Occurance {
   occurredAt DateTime
   projectId Int
   project Project @relation(fields: [projectId], references: [id])
+
+  @@index([occurredAt])
+  @@index([projectId])
+  @@map("occurances")
 }
