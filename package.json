@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "occurances:fetch": "npx ts-node ./src/scripts/occurances/fetch.ts"
+    "occurances:fetch": "npx ts-node ./src/scripts/occurances/fetch.ts",
+    "db:migrate": "prisma migrate dev",
+    "script": "npx ts-node"
   },
   "dependencies": {
     "@carbon/icons-react": "^11.52.0",
