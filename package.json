@@ -13,6 +13,7 @@
     "@carbon/icons-react": "^11.52.0",
     "@headlessui/react": "^2.0.4",
     "@nivo/line": "^0.88.0",
+    "@prisma/client": "5.22.0",
     "@tmcw/togeojson": "^5.8.1",
     "classnames": "^2.5.1",
     "eslint-plugin-next": "^0.0.0",
