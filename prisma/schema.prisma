@@ -33,7 +33,7 @@ model Analysis {
   occurances Occurance[]
 
   @@index([projectId])
-  @@map("analysis")
+  @@map("analyses")
 }
 
 model Occurance {

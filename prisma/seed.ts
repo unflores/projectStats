@@ -13,15 +13,10 @@ async function main() {
           type: "releaseCandidates",
           occurances: {
             create: [
-              {
-                occurredAt: new Date("2024-01-01"),
-              },
-              {
-                occurredAt: new Date("2024-01-15"),
-              },
-              {
-                occurredAt: new Date("2024-02-01"),
-              },
+              { occurredAt: new Date("2024-01-01") },
+              { occurredAt: new Date("2024-01-01") },
+              { occurredAt: new Date("2024-01-15") },
+              { occurredAt: new Date("2024-02-01") },
             ],
           },
         },
