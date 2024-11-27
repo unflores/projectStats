@@ -9,14 +9,14 @@ CREATE TABLE "projects" (
 );
 
 -- CreateTable
-CREATE TABLE "analysis" (
+CREATE TABLE "analyses" (
     "id" SERIAL NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "type" TEXT NOT NULL,
     "projectId" INTEGER NOT NULL,
 
-    CONSTRAINT "analysis_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "analyses_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -31,7 +31,7 @@ CREATE TABLE "occurances" (
 );
 
 -- CreateIndex
-CREATE INDEX "analysis_projectId_idx" ON "analysis"("projectId");
+CREATE INDEX "analyses_projectId_idx" ON "analyses"("projectId");
 
 -- CreateIndex
 CREATE INDEX "occurances_occurredAt_idx" ON "occurances"("occurredAt");
@@ -40,7 +40,7 @@ CREATE INDEX "occurances_occurredAt_idx" ON "occurances"("occurredAt");
 CREATE INDEX "occurances_analysisId_idx" ON "occurances"("analysisId");
 
 -- AddForeignKey
-ALTER TABLE "analysis" ADD CONSTRAINT "analysis_projectId_fkey" FOREIGN KEY ("projectId") REFERENCES "projects"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "analyses" ADD CONSTRAINT "analyses_projectId_fkey" FOREIGN KEY ("projectId") REFERENCES "projects"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "occurances" ADD CONSTRAINT "occurances_analysisId_fkey" FOREIGN KEY ("analysisId") REFERENCES "analysis"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "occurances" ADD CONSTRAINT "occurances_analysisId_fkey" FOREIGN KEY ("analysisId") REFERENCES "analyses"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
