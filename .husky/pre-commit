@@ -3,7 +3,6 @@
 GREEN="\e[0;32"
 NC="\e[0m\n"
 RED="\e[31m"
-GIT_ADD="^\+"
 
 CONSOLE_FOUND=$(git diff --staged -- ':(exclude).husky/pre-commit' | grep "^\+" | grep console.log | wc -l)
 if [ $CONSOLE_FOUND != '0' ]; then
