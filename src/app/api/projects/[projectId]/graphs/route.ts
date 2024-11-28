@@ -5,6 +5,7 @@ import moment from "moment";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { type NextRequest } from "next/server";
 import z from "zod";
+import { jsonResponse, type JsonResponse } from "@/lib/apiResponses";
 
 const getParamsValidator = z.object({
   projectId: z.coerce.number(),
@@ -53,8 +54,11 @@ const toLine = (project: FoundProject, occuranceCounts: FoundOccuranceCounts) =>
 };
 
 export type GraphResponse = ReturnType<typeof toLine>;
-
-export async function GET(req: NextRequest, { params }: { params: { projectId: number } }) {
+type GetParams = { params: { projectId: number } };
+export async function GET(
+  req: NextRequest,
+  { params }: GetParams
+): Promise<JsonResponse<GraphResponse>> {
   const searchParams = Object.fromEntries(req.nextUrl.searchParams);
 
   const { error, data: query } = apiValidator(getParamsValidator).validate({
@@ -63,7 +67,7 @@ export async function GET(req: NextRequest, { params }: { params: { projectId: n
   });
 
   if (error) {
-    return Response.json({ error }, { status: 400 });
+    return jsonResponse({ error }, 400);
   }
 
   let project;
@@ -71,13 +75,13 @@ export async function GET(req: NextRequest, { params }: { params: { projectId: n
     project = await findProject(query.projectId, query.analysisType);
   } catch (e) {
     if (e instanceof PrismaClientKnownRequestError) {
-      return new Response(
-        JSON.stringify({ error: [{ path: "project", message: "Could not find ressource." }] }),
-        { status: 404 }
+      return jsonResponse(
+        { error: [{ path: "project", message: "Could not find ressource." }] },
+        404
       );
     }
     throw e;
   }
   const occuranceCounts = await findOccuranceCounts(project.analysis[0].id);
-  return Response.json(toLine(project, occuranceCounts));
+  return jsonResponse(toLine(project, occuranceCounts));
 }

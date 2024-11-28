@@ -43,25 +43,25 @@ export const httpFetcher = async (input: RequestInfo, init?: RequestInit | undef
   }
 
   if (res.status === 400) {
-    const response = (await res.json()) as { error: ErrorDetails[] };
+    const response = (await res.json()) as { error: ErrorExplained[] };
     throw new ClientError("A client error occurred", response.error);
   } else {
-    // Fix this later
+    // This is a critical error and should be treated differently
     throw new ClientError("A server error occurred", [
       { path: "server", message: "An unknown error occurred." },
     ]);
   }
 };
 
-type ErrorDetails = {
-  path: string;
-  message: string;
+type ErrorExplained = {
+  path: string; // ideally a dot-separated list of strings ex: project.title.missing
+  message: string; // plain-text fallback
 };
 
 export class ClientError extends Error {
-  public details: ErrorDetails[];
+  public details: ErrorExplained[];
 
-  constructor(message: string, details: ErrorDetails[]) {
+  constructor(message: string, details: ErrorExplained[]) {
     super(message);
 
     this.details = details;
