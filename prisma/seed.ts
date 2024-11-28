@@ -1,16 +1,19 @@
-import db from "@/lib/db";
+import { AnalysisEnum } from "@/lib/analyses";
+import db, { nukeDatabaseRecords } from "@/lib/db";
 
 async function main() {
   if (process.env.NODE_ENV !== "development") {
     throw new Error("Seed should only be run in development.");
   }
 
+  await nukeDatabaseRecords();
+
   const project = await db.project.create({
     data: {
       name: "PsiAnalyzer",
       analysis: {
         create: {
-          type: "releaseCandidates",
+          type: AnalysisEnum.ReleaseCandidates,
           occurances: {
             create: [
               { occurredAt: new Date("2024-01-01") },
