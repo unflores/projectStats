@@ -1,0 +1,37 @@
+#!/bin/sh
+
+GREEN="\e[0;32"
+NC="\e[0m\n"
+RED="\e[31m"
+GIT_ADD="^\+"
+
+CONSOLE_FOUND=$(git diff --staged -- ':(exclude).husky/pre-commit' | grep "^\+" | grep console.log | wc -l)
+if [ $CONSOLE_FOUND != '0' ]; then
+  printf "${RED}You committed console.log. Remove it before commiting.${NC}"
+  exit 1
+fi
+
+DEBUG_FOUND=$(git diff --staged -- ':(exclude).husky/pre-commit' | grep "^\+" | grep logger.debug | wc -l)
+if [ $DEBUG_FOUND != '0' ]; then
+  printf "${RED}You committed logger.debug. If you want it to stay in, prefer logger.long.${NC}"
+  exit 1
+fi
+
+MERGE_FOUND=$(git diff --staged -- ':(exclude).husky/pre-commit' | grep "^\+" | grep "<<<<<<< HEAD" | wc -l)
+if [ $MERGE_FOUND != '0' ]; then
+  printf "${RED}You committed merge conflicts. Remove it before pushing.${NC}"
+  exit 1
+fi
+
+TEST_FOCUS_FOUND=$(git diff --staged -- ':(exclude).husky/pre-commit' | grep "^\+" | grep -e it\\.only -e describe\\.only | wc -l)
+if [ $TEST_FOCUS_FOUND != '0' ]; then
+  printf "${RED}You committed a test focus. Remove it before pushing.${NC}"
+  exit 1
+fi
+
+PRISMA_MODIFY_APPLIED=$(git diff --staged -- ':(exclude).husky/pre-commit' | grep "^--- a/prisma/migrations/" | wc -l)
+if [ $PRISMA_MODIFY_APPLIED != '0' ]; then
+  printf "${RED}You committed a modification to an applied prisma migration. Remove it before pushing.${NC}"
+  exit 1
+fi
+
