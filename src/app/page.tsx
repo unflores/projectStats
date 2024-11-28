@@ -5,19 +5,6 @@ import LineGraph from "@/rcl/graphs/LineGraph";
 import useGet from "@/lib/apiHooks/useGet";
 import { AnalysisEnum } from "@/lib/analyses";
 import { GraphResponse } from "@/app/api/projects/[projectId]/graphs/route";
-// const lines = [
-//   {
-//     id: "Monolith",
-//     color: "hsl(220,78%,50%)",
-//     data: [
-//       { x: '2024-01', y: 1 },
-//       { x: '2024-02', y: 20 },
-//       { x: '2024-03', y: 5 },
-//       { x: '2024-04', y: 8 },
-//       { x: '2024-05', y: 11 },
-//     ],
-//   },
-// ];
 
 export default function Home() {
   const { data: graphs, error, isLoading } = useGet<GraphResponse>(
