@@ -4,14 +4,13 @@ import React from "react";
 
 interface Props {
   name: string;
-  href: string;
+  href?: string;
   active: boolean;
 }
 
 const RouteItem = ({ name, href, active }: Props) => {
-  return (
-    <>
-
+  return href
+    ? (
       <Link
         className={cn(
           "mx-2 flex items-center p-3 rounded-md text-sm font-medium cursor-pointer relative group",
@@ -22,13 +21,24 @@ const RouteItem = ({ name, href, active }: Props) => {
         )}
         href={href} passHref>
 
-        <div className="flex items-center h-6 overflow-hidden min-w-6 whitespace-nowrap">
-          <span className="ml-2">{name}</span>
+        <div className="w-full h-6 overflow-hidden text-center whitespace-nowrap">
+          {name}
         </div>
 
       </Link>
-    </>
-  );
+    )
+    : (
+      <span
+        className={cn(
+          "p-3 text-sm font-medium text-gray-600"
+        )}
+      >
+        <div className="items-center h-6 overflow-hidden text-center min-w-6 whitespace-nowrap">
+          {name}
+        </div>
+
+      </span>
+    );
 };
 
 export default RouteItem;

@@ -23,6 +23,13 @@ const findProjects = async () => {
   }));
 };
 
+const buildNav = (projects: Awaited<ReturnType<typeof findProjects>>) => {
+  const navigation = projects.map(({ name, id }) => ({ name, href: `/projects/${id}/` }))
+  return navigation.length === 0
+    ? [{ name: "No projects" }]
+    : navigation
+}
+
 
 const Breadcrumbs = () => <></>;
 
@@ -37,11 +44,11 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <div className="relative z-40 flex min-h-screen">
-          <SideBar navigation={projects.map(({ name, id }) => ({ name, href: `/projects/${id}/` }))} className="hidden lg:flex" />
+        <div className="z-40 min-h-screen md:flex md:relative">
+          <SideBar navigation={buildNav(projects)} />
 
           <div className="relative flex-1 min-w-0">
-            <main className="lg:mt-0 lg:ml-[180px] min-h-screen">
+            <main className="md:mt-0 md:ml-[160px] min-h-screen">
               {children}
             </main>
           </div>
