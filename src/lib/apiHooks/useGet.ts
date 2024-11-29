@@ -3,6 +3,14 @@ import { buildQueryString, ClientError, httpFetcher, injectParams } from "./urls
 
 type ReplaceableParam = string | number | undefined | null;
 
+/*******
+Expected use:
+
+const { data, error, isLoading} = useGet(
+  '/api/projects/[projectId]/',
+  {path: {projectId: 1}, params: {analysisType: 'test', frame: 'weekly'}}
+);
+******/
 const useGet = <T>(
   path: string,
   {
@@ -24,15 +32,3 @@ const useGet = <T>(
 };
 
 export default useGet;
-
-// need to test fail case
-// loading state
-// error state
-// user errors and server errors => critical vs non-critical?
-// usage
-/*
-const { data, error, isLoading} = useGet(
-  '/api/projects/[projectId]/',
-  {path: {projectId: 1}, params: {analysisType: 'test', frame: 'weekly'}}
-)
-  */
