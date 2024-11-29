@@ -3,6 +3,10 @@ import type { infer as ZodInfer, ZodSchema } from "zod";
 
 type ReplaceableParam = string | number | undefined | null;
 
+// As Next has file structure like /api/projects/[projectId]/, it makes sense
+// to keep that structure to easily find the usage and to remain coherent
+// path will be the next path and then it will expect url params with the same key
+// to replace the next tokens.
 export const injectParams = (path: string, urlParams: Record<string, ReplaceableParam>) => {
   let injectedPath = path;
   let allPathVarsReplaced = true;
