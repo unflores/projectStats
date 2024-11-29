@@ -7,9 +7,8 @@ import RouteItem from "./RouteItem";
 
 export type Route = {
   name: string;
-  href: string;
-  isActive: (route: string | null) => boolean;
-  Icon: React.FC<{ className?: string; ariaHidden?: string }>;
+  href?: string;
+  isActive?: (route: string | null) => boolean;
 };
 
 interface Props {
@@ -20,10 +19,10 @@ interface Props {
 const SideBar = ({ navigation, className }: Props) => {
   const pathname = usePathname();
   return (
-    <div className={cn("px-5 fixed z-40 min-h-screen no-print", className)}>
+    <div className={cn("px-0 md:fixed md:flex z-40 md:min-h-screen no-print", className)}>
       <div
         className={
-          "flex flex-col transition-all duration-200 ease-in-out bg-white border-r border-gray-200 w-[10rem]"
+          "flex flex-col transition-all duration-200 ease-in-out bg-white md:border-r md:border-gray-200 md:w-[10rem]"
         }
       >
         <div className="flex flex-col flex-1">
@@ -36,13 +35,12 @@ const SideBar = ({ navigation, className }: Props) => {
           </div>
 
           <nav aria-label="Sidebar" className="flex flex-col">
-            {navigation.map(({ name, href, isActive, Icon }) => (
+            {navigation.map(({ name, href, isActive }) => (
               <RouteItem
                 key={href}
                 name={name}
                 href={href}
-                active={isActive(pathname)}
-                Icon={Icon}
+                active={isActive ? isActive(pathname) : href === pathname}
               />
             ))}
           </nav>
