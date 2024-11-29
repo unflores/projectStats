@@ -1,5 +1,4 @@
 import useSWR from "swr";
-import { EndpointResponse } from "./types";
 import { buildQueryString, ClientError, httpFetcher, injectParams } from "./urls";
 
 type ReplaceableParam = string | number | undefined | null;
@@ -9,7 +8,7 @@ const useGet = <T>(
   {
     path: pathParams,
     query: queryParams,
-  }: { path?: Record<string, ReplaceableParam>; query?: Record<string, ReplaceableParam> }
+  }: { path?: Record<string, ReplaceableParam>; query?: Record<string, ReplaceableParam> } = {}
 ) => {
   const queryString = buildQueryString(queryParams ?? {});
   const { injectedPath, allPathVarsReplaced } = injectParams(path, pathParams ?? {});
@@ -18,6 +17,7 @@ const useGet = <T>(
     allPathVarsReplaced ? `${injectedPath}${queryString}` : null,
     httpFetcher
   );
+
   const { data, error, isLoading } = res;
   console.log({ data, error, isLoading });
   return res;
