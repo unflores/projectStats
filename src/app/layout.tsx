@@ -31,8 +31,6 @@ const buildNav = (projects: Awaited<ReturnType<typeof findProjects>>) => {
 }
 
 
-const Breadcrumbs = () => <></>;
-
 export default async function RootLayout({
   children,
 }: Readonly<{

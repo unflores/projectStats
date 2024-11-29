@@ -21,9 +21,6 @@
     "@tmcw/togeojson": "^5.8.1",
     "classnames": "^2.5.1",
     "eslint-plugin-next": "^0.0.0",
-    "eslint-plugin-react": "^7.37.2",
-    "eslint-plugin-react-hooks": "^5.0.0",
-    "eslint-plugin-simple-import-sort": "^12.1.1",
     "jszip": "^3.10.1",
     "moment": "^2.30.1",
     "next": "14.2.3",
@@ -39,6 +36,7 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@eslint/js": "^9.15.0",
     "@types/classnames": "^2.3.1",
     "@types/node": "^20",
     "@types/react": "^18",
@@ -46,12 +44,17 @@
     "@types/xmldom": "^0.1.34",
     "autoprefixer": "^10.4.20",
     "commander": "^12.1.0",
-    "eslint": "^9.13.0",
+    "eslint": "^9.15.0",
     "eslint-config-next": "^15.0.2",
+    "eslint-plugin-react": "^7.37.2",
+    "eslint-plugin-react-hooks": "^5.0.0",
+    "eslint-plugin-simple-import-sort": "^12.1.1",
+    "globals": "^15.12.0",
     "husky": "^9.1.7",
     "postcss": "^8.4.49",
     "tailwindcss": "^3.4.14",
-    "typescript": "^5"
+    "typescript": "^5",
+    "typescript-eslint": "^8.16.0"
   },
   "packageManager": "pnpm@10.0.0-alpha.4+sha512.a766482ed7e5802db8966144e1de4918a71bc6b0f11d65d21fc719ce23fe6af38f527ae3b97e826f2378126f620b4d8950d1a990862c8666506cff017ee1d4cc"
 }

@@ -31,6 +31,6 @@
     "require": ["tsconfig-paths/register"]
 
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
-  "exclude": ["node_modules", "src/scripts/scratch"]
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx",  "*.mjs"],
+  "exclude": ["node_modules", "src/scripts/scratch", ".next" ]
 }
