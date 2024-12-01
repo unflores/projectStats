@@ -1,6 +1,6 @@
 import { z } from "zod";
 // The config file isn in the repo so ignore it.
-// @ts-ignore: Suppress missing file error
+// @ts-expect-error: Suppress missing file error
 import projectConfigJson from "../config.json";
 import { ProcessorName } from "./types";
 import ReleaseCandidatesProcessor from "./processors/ReleaseCandidatesProcessor";
