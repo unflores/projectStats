@@ -3,6 +3,7 @@ import { Command } from "commander";
 import { z } from "zod";
 import { ProcessorName } from "./types";
 import { buildProcessor } from "./buildProcessor";
+import logger from "@/lib/logger";
 
 const program = new Command();
 program.version("0.0.1");
@@ -37,6 +38,7 @@ const { processorName, projectName } = response.data;
 const main = async () => {
   const processor = buildProcessor(processorName, projectName);
   const occurances = await processor.buildOccurances();
+  logger.log({ occurances });
 };
 
 runScript(main);

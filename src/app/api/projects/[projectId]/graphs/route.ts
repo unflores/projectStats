@@ -34,7 +34,7 @@ const findOccuranceCounts = async (id: number) => {
       a.id
     FROM occurances o
     JOIN analyses a on o."analysisId" = a.id
-    WHERE a.id = 5
+    WHERE a.id = ${id}
     GROUP BY DATE("occurredAt"), a.id
     ORDER BY date asc
   `) as { count: number; date: Date }[];

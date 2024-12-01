@@ -13,8 +13,6 @@ const levelClasses = (level: number) => {
       return "text-base leading-5 lg:text-lg font-sans-serif"
     case 5:
       return "text-base font-sans-serif"
-    case 3:
-      return "text-sm font-sans-serif"
   }
 }
 
@@ -22,14 +20,14 @@ const levelClasses = (level: number) => {
 interface Props {
   className?: string;
   level?: 1 | 2 | 3 | 4 | 5 | 6;
-  children: any;
+  children: React.ReactNode;
   id?: string;
   title?: string;
 }
 
 const Title = ({ className, level = 1, children, id, title }: Props) => {
-  const CustomTag: any = `h${level}`;
 
+  const CustomTag: keyof JSX.IntrinsicElements = `h${level}` as keyof JSX.IntrinsicElements
   return (
     <CustomTag title={title} id={id} className={cn(levelClasses(level), "mt-3", className)}>
       {children}
