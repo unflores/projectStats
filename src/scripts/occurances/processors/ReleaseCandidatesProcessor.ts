@@ -1,10 +1,11 @@
-import { Processor, ProcessorName } from "../types";
+import { AvailableProcessorEnum, Processor } from "../types";
 import * as util from "util";
 import { exec } from "child_process";
-import logger from "@/lib/logger";
+import moment from "moment";
 
 export const asyncExec = util.promisify(exec);
 
+const type = AvailableProcessorEnum.ReleaseCandidates;
 class ReleaseCandidatesProcessor implements Processor {
   absPath: string;
 
@@ -22,12 +23,12 @@ class ReleaseCandidatesProcessor implements Processor {
       .split("\n")
       .map((line) => line.split("_commitsep_"))
       .map((vals) => ({
-        type: ProcessorName.ReleaseCandidates,
+        type,
         id: vals[0].trim(),
-        timestamp: vals[1],
+        occurredAt: moment(vals[1], "ddd MMM DD HH:mm:ss YYYY Z").format(),
       }))
       .filter((commit) => commit.id !== "");
-    logger.debug({ occurances });
+
     return occurances;
   }
 }

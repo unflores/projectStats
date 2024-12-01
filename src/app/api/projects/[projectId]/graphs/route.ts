@@ -29,13 +29,13 @@ const findProject = async (id: number, analysisType: AnalysisEnum) => {
 const findOccuranceCounts = async (id: number) => {
   return (await prisma.$queryRaw`
     SELECT
-      DATE("occurredAt") as date,
+      DATE(occurred_at) as date,
       COUNT(*)::INT as count,
       a.id
     FROM occurances o
-    JOIN analyses a on o."analysisId" = a.id
+    JOIN analyses a on o.analysis_id = a.id
     WHERE a.id = ${id}
-    GROUP BY DATE("occurredAt"), a.id
+    GROUP BY DATE(occurred_at), a.id
     ORDER BY date asc
   `) as { count: number; date: Date }[];
 };
