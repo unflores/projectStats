@@ -2,7 +2,11 @@
   "compilerOptions": {
     "baseUrl": ".",
     "target": "esnext",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -20,7 +24,9 @@
       }
     ],
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": [
+        "./src/*"
+      ]
     }
   },
   "ts-node": {
@@ -28,9 +34,20 @@
     "compilerOptions": {
       "module": "Node16"
     },
-    "require": ["tsconfig-paths/register"]
-
+    "require": [
+      "tsconfig-paths/register"
+    ]
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx",  "*.mjs"],
-  "exclude": ["node_modules", "src/scripts/scratch", ".next" ]
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "*.mjs",
+    ".next/types/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "src/scripts/scratch",
+    ".next"
+  ]
 }

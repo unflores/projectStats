@@ -7,7 +7,6 @@ async function main() {
   }
 
   await nukeDatabaseRecords();
-
   const project = await db.project.create({
     data: {
       name: "PsiAnalyzer",
@@ -16,10 +15,10 @@ async function main() {
           type: AnalysisEnum.ReleaseCandidates,
           occurances: {
             create: [
-              { occurredAt: new Date("2024-01-01") },
-              { occurredAt: new Date("2024-01-01") },
-              { occurredAt: new Date("2024-01-15") },
-              { occurredAt: new Date("2024-02-01") },
+              { externalId: "abc123", occurredAt: new Date("2024-01-01") },
+              { externalId: "abc124", occurredAt: new Date("2024-01-01") },
+              { externalId: "abc125", occurredAt: new Date("2024-01-15") },
+              { externalId: "abc126", occurredAt: new Date("2024-02-01") },
             ],
           },
         },

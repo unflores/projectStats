@@ -5,6 +5,7 @@ import moment from "moment";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { type NextRequest } from "next/server";
 import z from "zod";
+import projectQueries from "@/queries/projectQueries";
 import { jsonResponse, type JsonResponse } from "@/lib/apiResponses";
 
 const getParamsValidator = z.object({
@@ -12,38 +13,26 @@ const getParamsValidator = z.object({
   analysisType: z.nativeEnum(AnalysisEnum),
 });
 
-const findProject = async (id: number, analysisType: AnalysisEnum) => {
-  return await prisma.project.findFirstOrThrow({
-    where: {
-      id,
-      analysis: {
-        some: {
-          type: analysisType,
-        },
-      },
-    },
-    include: { analysis: true },
-  });
-};
-
 const findOccuranceCounts = async (id: number) => {
   return (await prisma.$queryRaw`
     SELECT
-      DATE("occurredAt") as date,
+      DATE(occurred_at) as date,
       COUNT(*)::INT as count,
       a.id
     FROM occurances o
-    JOIN analyses a on o."analysisId" = a.id
+    JOIN analyses a on o.analysis_id = a.id
     WHERE a.id = ${id}
-    GROUP BY DATE("occurredAt"), a.id
+    GROUP BY DATE(occurred_at), a.id
     ORDER BY date asc
   `) as { count: number; date: Date }[];
 };
 
-type FoundProject = Awaited<ReturnType<typeof findProject>>;
 type FoundOccuranceCounts = Awaited<ReturnType<typeof findOccuranceCounts>>;
 
-const toLine = (project: FoundProject, occuranceCounts: FoundOccuranceCounts) => {
+const toLine = (
+  project: Awaited<ReturnType<typeof projectQueries.findWithAnalysesBy>>,
+  occuranceCounts: FoundOccuranceCounts
+) => {
   return project?.analysis.map((analysis) => ({
     analysis: analysis.type,
     data: occuranceCounts.map(({ count, date }) => ({
@@ -55,6 +44,7 @@ const toLine = (project: FoundProject, occuranceCounts: FoundOccuranceCounts) =>
 
 export type GraphResponse = ReturnType<typeof toLine>;
 type GetParams = { params: { projectId: number } };
+
 export async function GET(
   req: NextRequest,
   { params }: GetParams
@@ -72,7 +62,10 @@ export async function GET(
 
   let project;
   try {
-    project = await findProject(query.projectId, query.analysisType);
+    project = await projectQueries.findWithAnalysesBy({
+      id: query.projectId,
+      analysisType: query.analysisType,
+    });
   } catch (e) {
     if (e instanceof PrismaClientKnownRequestError) {
       return jsonResponse(

@@ -1,9 +1,10 @@
 import { runScript } from "../scriptRunner";
 import { Command } from "commander";
 import { z } from "zod";
-import { ProcessorName } from "./types";
+import { AvailableProcessorEnum } from "./types";
 import { buildProcessor } from "./buildProcessor";
 import logger from "@/lib/logger";
+import prisma from "@/lib/db";
 
 const program = new Command();
 program.version("0.0.1");
@@ -13,9 +14,9 @@ program.parse(process.argv);
 
 const response = z
   .object({
-    processorName: z.enum(Object.keys(ProcessorName) as [string, ...string[]], {
+    processorName: z.enum(Object.keys(AvailableProcessorEnum) as [string, ...string[]], {
       errorMap: () => ({
-        message: `Invalid processor name. Possible values: (${Object.keys(ProcessorName).join("|")})`,
+        message: `Invalid processor name. Possible values: (${Object.keys(AvailableProcessorEnum).join("|")})`,
       }),
     }),
     projectName: z.string({
@@ -25,10 +26,14 @@ const response = z
   .safeParse(program.opts());
 
 if (response.error) {
-  console.error("Validation errors:");
-  console.log(response.error);
-  response.error.issues.forEach((issue) => {
-    console.error(`--${issue.path.join("")} `, issue.message);
+  logger.error("Validation errors:");
+
+  response.error.errors.forEach((error) => {
+    logger.error(
+      `--${error.path.join("")} `,
+      error.message,
+      `Received: ${(error as unknown as { received: string }).received}` // this is annoying but the attribute is there...
+    );
   });
   process.exit(1);
 }
@@ -38,7 +43,34 @@ const { processorName, projectName } = response.data;
 const main = async () => {
   const processor = buildProcessor(processorName, projectName);
   const occurances = await processor.buildOccurances();
-  logger.log({ occurances });
+
+  const project = await prisma.project.upsert({
+    where: {
+      name: projectName,
+    },
+    update: {},
+    create: { name: projectName },
+  });
+
+  const analysis = await prisma.analysis.upsert({
+    where: {
+      projectId_type: {
+        projectId: project.id,
+        type: processorName,
+      },
+    },
+    update: {},
+    create: { type: processorName, projectId: project.id },
+  });
+
+  await prisma.occurance.createMany({
+    data: occurances.map(({ occurredAt, id }) => ({
+      externalId: id,
+      analysisId: analysis.id,
+      occurredAt,
+    })),
+    skipDuplicates: true,
+  });
 };
 
 runScript(main);

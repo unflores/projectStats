@@ -2,8 +2,8 @@ import { z } from "zod";
 // The config file isn in the repo so ignore it.
 // @ts-expect-error: Suppress missing file error
 import projectConfigJson from "../config.json";
-import { ProcessorName } from "./types";
 import ReleaseCandidatesProcessor from "./processors/ReleaseCandidatesProcessor";
+import { AvailableProcessorEnum } from "./types";
 
 const projectConfigSchema = z.record(
   z.object({
@@ -31,7 +31,7 @@ export function buildProcessor(processorName: string, projectName: string) {
   }
 
   switch (processorName) {
-    case ProcessorName.ReleaseCandidates:
+    case AvailableProcessorEnum.ReleaseCandidates:
       if (projectConfig.git === undefined) {
         throw new Error(`Project ${projectName} has no git config`);
       }
