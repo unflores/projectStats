@@ -1,5 +1,4 @@
-import { ResponsiveLine } from '@nivo/line'
-
+import Plot from 'react-plotly.js'
 
 type Line = {
   id: string;
@@ -11,87 +10,53 @@ type Line = {
 };
 
 interface Props {
-  lines: Line[];
+  line: Line;
   xLabel?: string;
   yLabel?: string;
   className?: string;
 }
 
-const LineGraph = ({ lines, className, xLabel, yLabel }: Props) => {
-  const avg = lines[0].data.reduce((sum, atts) => atts.y + sum, 0) / lines[0].data.length
+const LineGraph = ({ line, xLabel, yLabel }: Props) => {
 
-  return (< div className={className} >
-    <ResponsiveLine
-      markers={[{
-        axis: 'y',
-        value: avg.toFixed(2),
-        lineStyle: { stroke: '#b0b0b0', strokeWidth: 2, zIndex: 99999 },
-        legend: `Mean ${avg.toFixed(2)}`,
-        legendPosition: 'top-right',
+  const layout = {
+    title: 'Release Candidate Frequency',
+    uirevision: 'true',
+    xaxis: {
+      title: {
+        text: xLabel,
+        font: {
+          size: 16,
+          color: "#7f7f7f",
+        },
+      },
+    },
+    yaxis: {
+      title: {
+        text: yLabel,
+        font: {
+          size: 16,
+          color: "#7f7f7f",
+        },
+      },
+    },
+  }
 
-      }]}
-      layers={['grid', 'axes', 'areas', 'crosshair', 'lines', 'markers', 'points', 'slices', 'mesh', 'legends']}
-      data={lines}
-      margin={{ top: 50, right: 110, bottom: 50, left: 60 }}
-      xScale={{ type: 'point' }}
-      yScale={{
-        type: 'linear',
-        min: 'auto',
-        max: 'auto',
-        stacked: true,
-        reverse: false
-      }}
-      yFormat=" >-.2f"
-      axisTop={null}
-      axisRight={null}
-      axisBottom={{
-        tickSize: 5,
-        tickPadding: 5,
-        tickRotation: 0,
-        legend: xLabel,
-        legendOffset: 36,
-        legendPosition: 'middle',
-        truncateTickAt: 0
-      }}
-      axisLeft={{
-        tickSize: 5,
-        tickPadding: 5,
-        tickRotation: 0,
-        legend: yLabel,
-        legendOffset: -40,
-        legendPosition: 'middle',
-        truncateTickAt: 0
-      }}
-
-
-      lineWidth={6}
-      pointSize={8}
-      pointColor={{ theme: 'background' }}
-      pointBorderWidth={2}
-      pointBorderColor={{ from: 'serieColor' }}
-      pointLabel="data.yFormatted"
-      pointLabelYOffset={-12}
-      enableArea={false}
-
-      enableTouchCrosshair={true}
-      useMesh={false}
-      legends={[
+  return (< div className='w-full' >
+    <Plot
+      data={[
         {
-          anchor: 'bottom-right',
-          direction: 'column',
-          justify: false,
-          translateX: 100,
-          translateY: 0,
-          itemsSpacing: 0,
-          itemDirection: 'left-to-right',
-          itemWidth: 80,
-          itemHeight: 20,
-          itemOpacity: 0.75,
-          symbolSize: 12,
-          symbolShape: 'circle',
-          symbolBorderColor: 'rgba(0, 0, 0, .5)',
+          x: line.data.map(({ x }) => x),
+          y: line.data.map(({ y }) => y),
+          line: { color: '#b55400' },
+          name: "deploys",
+          mode: 'lines',
+          hovertemplate: "x: %{x}<br>y: %{y}<extra></extra>"
         }
       ]}
+      useResizeHandler={true}
+      layout={layout}
+      style={{ width: "100%", height: "100%" }}
+      config={{ responsive: true }}
     />
   </div >);
 };

@@ -6,20 +6,26 @@ import useGet from "@/lib/apiHooks/useGet";
 import { AnalysisEnum } from "@/lib/analyses";
 import { GraphResponse } from "@/app/api/projects/[projectId]/graphs/route";
 import { useParams } from "next/navigation";
+import { ProjectResponse } from "@/app/api/projects/[projectId]/route";
 
 export default function Page() {
   const { projectId } = useParams()
 
-  const { data: graphs, error, isLoading } = useGet<GraphResponse>(
+  const { data: project, error: projectError, isLoading: projectLoading } = useGet<ProjectResponse>(
+    "/api/projects/[projectId]",
+    { path: { projectId: projectId as string }, query: { analysisType: AnalysisEnum.ReleaseCandidates } }
+  );
+
+  const { data: graphs, error: graphError, isLoading: graphLoading } = useGet<GraphResponse>(
     "/api/projects/[projectId]/graphs",
     { path: { projectId: projectId as string }, query: { analysisType: AnalysisEnum.ReleaseCandidates } }
   );
 
-  if (isLoading) {
+  if (projectLoading || graphLoading) {
     return (<></>);
   }
 
-  if (error || !graphs) {
+  if (projectError || graphError || !graphs || !project) {
     return <div>An error occurred.</div>
   }
 
@@ -31,9 +37,9 @@ export default function Page() {
 
   return (
     <div className="flex flex-col min-h-screen p-5">
+      <Title level={1}>{project.name}</Title>
       <Card>
-        <Title level={1}>RC Frequency</Title>
-        <LineGraph className="h-[400px]" lines={lines} xLabel="Date" yLabel="Release Candidates" />
+        <LineGraph className="h-[400px]" line={lines[0]} xLabel="Date" yLabel="Release Candidates" />
       </Card>
     </div>
   );
