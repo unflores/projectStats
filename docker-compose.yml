@@ -1,6 +1,6 @@
 version: "3.9"
 volumes:
-  project-knowledge-data:
+  project-knowledge-data-psqlv16:
     external: false
 
 services:
@@ -9,7 +9,7 @@ services:
       context: "."
       dockerfile: ./docker/postgres/DockerFile
     volumes:
-      - project-knowledge-data:/var/lib/postgresql/data
+      - project-knowledge-data-psqlv16:/var/lib/postgresql/data
     container_name: project-knowledge-database
     ports:
       - "5432:5432"
