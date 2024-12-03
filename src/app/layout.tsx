@@ -13,13 +13,13 @@ export const metadata: Metadata = {
 
 const findProjects = async () => {
   const projects = await prisma.project.findMany({
-    include: { analysis: true },
+    include: { analyses: true },
   });
 
-  return projects.map(({ id, analysis, name }) => ({
+  return projects.map(({ id, analyses, name }) => ({
     id,
     name,
-    analyses: analysis.map(({ type }) => type),
+    analyses: analyses.map(({ type }) => type),
   }));
 };
 
