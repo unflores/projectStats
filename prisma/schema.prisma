@@ -17,7 +17,7 @@ model Project {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @map("created_at") @default(now())
   updatedAt DateTime @map("updated_at") @updatedAt
-  analysis  Analysis[]
+  analyses  Analysis[]
   name      String
 
   @@unique([name])

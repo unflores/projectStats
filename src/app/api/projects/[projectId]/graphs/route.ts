@@ -33,7 +33,7 @@ const toLine = (
   project: Awaited<ReturnType<typeof projectQueries.findWithAnalysesBy>>,
   occuranceCounts: FoundOccuranceCounts
 ) => {
-  return project?.analysis.map((analysis) => ({
+  return project?.analyses.map((analysis) => ({
     analysis: analysis.type,
     data: occuranceCounts.map(({ count, date }) => ({
       x: moment(date).format("YYYY-MM-DD"),
@@ -75,6 +75,6 @@ export async function GET(
     }
     throw e;
   }
-  const occuranceCounts = await findOccuranceCounts(project.analysis[0].id);
+  const occuranceCounts = await findOccuranceCounts(project.analyses[0].id);
   return jsonResponse(toLine(project, occuranceCounts));
 }
