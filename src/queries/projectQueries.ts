@@ -16,9 +16,9 @@ export default {
     return await prisma.project.findFirstOrThrow({
       where: {
         ...filters,
-        analysis: analysisType ? { some: { type: analysisType } } : undefined,
+        analyses: analysisType ? { some: { type: analysisType } } : undefined,
       },
-      include: { analysis: true },
+      include: { analyses: true },
     });
   },
 };

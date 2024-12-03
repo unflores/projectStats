@@ -10,7 +10,7 @@ async function main() {
   const project = await db.project.create({
     data: {
       name: "PsiAnalyzer",
-      analysis: {
+      analyses: {
         create: {
           type: AnalysisEnum.ReleaseCandidates,
           occurances: {
@@ -25,7 +25,7 @@ async function main() {
       },
     },
     include: {
-      analysis: {
+      analyses: {
         include: {
           _count: {
             select: {
@@ -39,7 +39,7 @@ async function main() {
 
   console.log("Created project: ", project.name);
   console.log(
-    `With analysis of ${project.analysis[0].type} with ${project.analysis[0]._count.occurances} occurances`
+    `With analysis of ${project.analyses[0].type} with ${project.analyses[0]._count.occurances} occurances`
   );
 }
 

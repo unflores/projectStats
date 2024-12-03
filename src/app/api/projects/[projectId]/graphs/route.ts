@@ -1,39 +1,26 @@
 import { AnalysisEnum } from "@/lib/analyses";
 import { apiValidator } from "@/lib/apiHooks/urls";
-import prisma from "@/lib/db";
 import moment from "moment";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { type NextRequest } from "next/server";
 import z from "zod";
 import projectQueries from "@/queries/projectQueries";
+import occuranceQueries from "@/queries/occurances/countsQueries";
 import { jsonResponse, type JsonResponse } from "@/lib/apiResponses";
+import { toCoalescedCounts } from "@/queries/occurances/utils";
 
 const getParamsValidator = z.object({
   projectId: z.coerce.number(),
   analysisType: z.nativeEnum(AnalysisEnum),
 });
 
-const findOccuranceCounts = async (id: number) => {
-  return (await prisma.$queryRaw`
-    SELECT
-      DATE(occurred_at) as date,
-      COUNT(*)::INT as count,
-      a.id
-    FROM occurances o
-    JOIN analyses a on o.analysis_id = a.id
-    WHERE a.id = ${id}
-    GROUP BY DATE(occurred_at), a.id
-    ORDER BY date asc
-  `) as { count: number; date: Date }[];
-};
-
-type FoundOccuranceCounts = Awaited<ReturnType<typeof findOccuranceCounts>>;
+type FoundOccuranceCounts = Awaited<ReturnType<typeof occuranceQueries.findCounts>>;
 
 const toLine = (
   project: Awaited<ReturnType<typeof projectQueries.findWithAnalysesBy>>,
   occuranceCounts: FoundOccuranceCounts
 ) => {
-  return project?.analysis.map((analysis) => ({
+  return project?.analyses.map((analysis) => ({
     analysis: analysis.type,
     data: occuranceCounts.map(({ count, date }) => ({
       x: moment(date).format("YYYY-MM-DD"),
@@ -75,6 +62,6 @@ export async function GET(
     }
     throw e;
   }
-  const occuranceCounts = await findOccuranceCounts(project.analysis[0].id);
-  return jsonResponse(toLine(project, occuranceCounts));
+  const occuranceCounts = await occuranceQueries.findCounts(project.analyses[0].id, "fiveYears");
+  return jsonResponse(toLine(project, toCoalescedCounts(occuranceCounts)));
 }

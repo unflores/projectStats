@@ -1,9 +1,11 @@
 import { z } from "zod";
-// The config file isn in the repo so ignore it.
-// @ts-expect-error: Suppress missing file error
-import projectConfigJson from "../config.json";
+
 import ReleaseCandidatesProcessor from "./processors/ReleaseCandidatesProcessor";
 import { AvailableProcessorEnum } from "./types";
+
+// This is a user provided config file, so require it dynamically
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const projectConfigJson = require("../config.json");
 
 const projectConfigSchema = z.record(
   z.object({
