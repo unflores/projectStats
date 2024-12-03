@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "occurances:fetch": "npx ts-node ./src/scripts/occurances/fetch.ts",
+    "occurances:ingest": "npx ts-node ./src/scripts/occurances/ingest.ts",
     "db:migrate": "prisma migrate dev",
     "db:seed": "npx ts-node ./prisma/seed.ts",
     "script": "npx ts-node",
