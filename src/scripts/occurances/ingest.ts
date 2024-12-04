@@ -5,6 +5,12 @@ import { AvailableProcessorEnum } from "./types";
 import { buildProcessor } from "./buildProcessor";
 import logger from "@/lib/logger";
 import prisma from "@/lib/db";
+import { buildConfig } from "@/scripts/projectConfig";
+// This is a user provided config file, so require it dynamically
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const projectConfigJson = require("../config.json");
+
+const projectConfig = buildConfig(projectConfigJson);
 
 const program = new Command();
 program.version("0.0.1");
@@ -20,7 +26,9 @@ const response = z
       }),
     }),
     projectName: z.string({
-      errorMap: () => ({ message: "Project name is required" }),
+      errorMap: () => ({
+        message: `Project name is required. Possible values: (${projectConfig.projects().join("|")})`,
+      }),
     }),
   })
   .safeParse(program.opts());
