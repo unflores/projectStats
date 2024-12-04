@@ -7,8 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "occurances:fetch": "npx ts-node ./src/scripts/occurances/fetch.ts",
-    "db:migrate": "prisma migrate dev",
+    "occurances:ingest": "npx ts-node ./src/scripts/occurances/ingest.ts",
+    "db:migrate-dev": "prisma migrate dev",
+    "db:migrate-prod": "prisma migrate deploy",
     "db:seed": "npx ts-node ./prisma/seed.ts",
     "script": "npx ts-node",
     "prepare": "husky"
