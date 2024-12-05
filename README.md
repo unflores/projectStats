@@ -13,7 +13,7 @@ cp ./config.json.example ./src/scripts/config.json
 sed -i "s|<current dir>|$(pwd)|g" ./src/scripts/config.json
 
 # Fetch the occurances for the processor
-pnpm run occurances:fetch --processorName ReleaseCandidates --projectName projectStats
+pnpm run occurances:ingest --processorName ReleaseCandidates --projectName projectStats
 
 pnpm dev
 xdg-open http://localhost:3000
