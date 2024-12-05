@@ -37,7 +37,7 @@ const SideBar = ({ navigation, className }: Props) => {
           <nav aria-label="Sidebar" className="flex flex-col">
             {navigation.map(({ name, href, isActive }) => (
               <RouteItem
-                key={href}
+                key={name}
                 name={name}
                 href={href}
                 active={isActive ? isActive(pathname) : href === pathname}
