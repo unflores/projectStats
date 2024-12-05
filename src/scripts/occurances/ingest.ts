@@ -60,25 +60,37 @@ const main = async () => {
     create: { name: projectName },
   });
 
-  const analysis = await prisma.analysis.upsert({
-    where: {
-      projectId_type: {
-        projectId: project.id,
-        type: processorName,
-      },
-    },
-    update: {},
-    create: { type: processorName, projectId: project.id },
-  });
-
-  await prisma.occurance.createMany({
-    data: occurances.map(({ occurredAt, id }) => ({
-      externalId: id,
-      analysisId: analysis.id,
-      occurredAt,
+  await prisma.analysis.createMany({
+    data: processor.analyses().map((analysis) => ({
+      type: analysis,
+      projectId: project.id,
     })),
     skipDuplicates: true,
   });
+
+  const analyses = await prisma.analysis.findMany({
+    where: {
+      type: { in: processor.analyses() },
+      projectId: project.id,
+    },
+  });
+
+  const results = await prisma.occurance.createMany({
+    data: occurances
+      .map(({ occurredAt, id, type }) => ({
+        externalId: id,
+        analysisId: analyses.find(({ type: persistedType }) => persistedType === type)?.id,
+        occurredAt,
+      }))
+      .filter((occuranceData) => occuranceData.analysisId !== undefined) as unknown as {
+      externalId: string;
+      analysisId: number;
+      occurredAt: string;
+    },
+    skipDuplicates: true,
+  });
+
+  logger.log({ parsed: occurances.length, imported: results.count });
 };
 
 runScript(main);
