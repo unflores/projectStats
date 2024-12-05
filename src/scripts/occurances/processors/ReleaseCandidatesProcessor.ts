@@ -13,6 +13,10 @@ class ReleaseCandidatesProcessor implements Processor {
     this.absPath = absPath;
   }
 
+  analyses() {
+    return [AvailableProcessorEnum.ReleaseCandidates];
+  }
+
   async buildOccurances() {
     const logs = await asyncExec(
       `git -C ${this.absPath} log --pretty=format:"%h_commitsep_%ad"`,
