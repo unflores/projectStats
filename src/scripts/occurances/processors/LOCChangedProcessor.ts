@@ -27,7 +27,6 @@ class ReleaseCandidatesProcessor implements Processor {
       { maxBuffer: 10 * 1024 * 1024 } // Bad temp idea
     );
 
-    //clean
     const occurances = (logs.stdout as string)
       .trim()
       .split("\n")

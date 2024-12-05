@@ -1,4 +1,4 @@
-import LOCChangeProcessor from "./processors/LOCChangeProcessor";
+import LOCChangeProcessor from "./processors/LOCChangedProcessor";
 import ReleaseCandidatesProcessor from "./processors/ReleaseCandidatesProcessor";
 import { AvailableProcessorEnum } from "./types";
 import { fetchConfig } from "@/scripts/projectConfig";
