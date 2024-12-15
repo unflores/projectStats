@@ -77,15 +77,17 @@ const main = async () => {
 
   const results = await prisma.occurance.createMany({
     data: occurances
-      .map(({ occurredAt, id, type }) => ({
+      .map(({ occurredAt, amount, id, type }) => ({
         externalId: id,
         analysisId: analyses.find(({ type: persistedType }) => persistedType === type)?.id,
         occurredAt,
+        amount,
       }))
       .filter((occuranceData) => occuranceData.analysisId !== undefined) as unknown as {
       externalId: string;
       analysisId: number;
       occurredAt: string;
+      amount: number;
     },
     skipDuplicates: true,
   });

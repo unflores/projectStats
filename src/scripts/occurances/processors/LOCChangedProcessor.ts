@@ -34,19 +34,19 @@ class ReleaseCandidatesProcessor implements Processor {
       .flatMap(([added, removed, time, hash]) => [
         {
           type,
-          count: Number.parseInt(added) - Number.parseInt(removed),
+          amount: Number.parseInt(added) - Number.parseInt(removed),
           id: hash.trim(),
           occurredAt: moment.unix(Number.parseInt(time)).toISOString(),
         },
         {
           type: AvailableAnalysisEnum.LOCAdded,
-          count: Number.parseInt(added),
+          amount: Number.parseInt(added),
           id: hash.trim(),
           occurredAt: moment.unix(Number.parseInt(time)).toISOString(),
         },
         {
           type: AvailableAnalysisEnum.LOCRemoved,
-          count: Number.parseInt(removed),
+          amount: Number.parseInt(removed),
           id: hash.trim(),
           occurredAt: moment.unix(Number.parseInt(time)).toISOString(),
         },

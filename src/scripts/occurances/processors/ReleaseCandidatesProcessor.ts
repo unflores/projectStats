@@ -29,6 +29,7 @@ class ReleaseCandidatesProcessor implements Processor {
       .map((vals) => ({
         type,
         id: vals[0].trim(),
+        amount: 1,
         occurredAt: moment(vals[1], "ddd MMM DD HH:mm:ss YYYY Z").format(),
       }))
       .filter((commit) => commit.id !== "");
