@@ -19,7 +19,7 @@ interface Props {
 const LineGraph = ({ line, xLabel, yLabel }: Props) => {
 
   const layout = {
-    title: 'Release Candidate Frequency',
+    title: line.id,
     uirevision: 'true',
     xaxis: {
       title: {

@@ -9,7 +9,7 @@ export default {
     return (await prisma.$queryRaw`
       SELECT
         DATE(occurred_at) as date,
-        COUNT(*)::INT as count,
+        SUM(amount)::INT as count,
         a.id
       FROM occurances o
       JOIN analyses a on o.analysis_id = a.id

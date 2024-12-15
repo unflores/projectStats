@@ -25,7 +25,18 @@ export function toCoalescedCounts(counts: FoundCounts) {
     }
 
     if (lastCount.date.getMonth() < count.date.getMonth()) {
-      return [...coalescedCounts, count];
+      if (count.date.getMonth() - lastCount.date.getMonth() > 1) {
+        return [
+          ...coalescedCounts,
+          {
+            date: new Date(lastCount.date.getFullYear(), lastCount.date.getMonth() + 1, 1),
+            count: 0,
+          },
+          count,
+        ];
+      } else {
+        return [...coalescedCounts, count];
+      }
     } else {
       return [...coalescedCounts, { ...count, count: count.count + lastCount.count }];
     }

@@ -29,18 +29,16 @@ export default function Page() {
     return <div>An error occurred.</div>
   }
 
-  const lines = graphs.map(({ analysis, data }) => ({
-    id: analysis,
-    color: "hsl(220,78%,50%)",
-    data: data
-  }));
-
   return (
-    <div className="flex flex-col min-h-screen p-5">
-      <Title level={1}>{project.name}</Title>
+    <>
       <Card>
-        <LineGraph className="h-[400px]" line={lines[0]} xLabel="Date" yLabel="Release Candidates" />
+        <Title level={1}>{project.name}</Title>
+        <div className="flex flex-col min-h-screen p-5">
+          {graphs.map(({ analysis, data }) => (
+            <LineGraph key={analysis} className="h-[400px]" line={{ id: analysis, color: "hsl(220,78%,50%)", data }} xLabel="Date" yLabel="Release Candidates" />
+          ))}
+        </div>
       </Card>
-    </div>
+    </>
   );
 }
