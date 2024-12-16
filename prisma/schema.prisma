@@ -40,6 +40,7 @@ model Analysis {
 
 model Occurance {
   id         Int      @id @default(autoincrement())
+  amount     Int      @map("amount") @default(1)
   externalId String   @map("external_id")
   createdAt  DateTime @map("created_at") @default(now())
   updatedAt  DateTime @map("updated_at") @updatedAt

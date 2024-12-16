@@ -14,7 +14,9 @@ const getParamsValidator = z.object({
   analysisType: z.nativeEnum(AnalysisEnum),
 });
 
-type FoundOccuranceCounts = Awaited<ReturnType<typeof occuranceQueries.findCounts>>;
+type FoundOccuranceCounts = {
+  [key: string]: { count: number; date: Date }[];
+};
 
 const toLine = (
   project: Awaited<ReturnType<typeof projectQueries.findWithAnalysesBy>>,
@@ -22,13 +24,12 @@ const toLine = (
 ) => {
   return project?.analyses.map((analysis) => ({
     analysis: analysis.type,
-    data: occuranceCounts.map(({ count, date }) => ({
+    data: toCoalescedCounts(occuranceCounts[analysis.type]).map(({ count, date }) => ({
       x: moment(date).format("YYYY-MM-DD"),
       y: count,
     })),
   }));
 };
-
 export type GraphResponse = ReturnType<typeof toLine>;
 type GetParams = { params: { projectId: number } };
 
@@ -62,6 +63,15 @@ export async function GET(
     }
     throw e;
   }
-  const occuranceCounts = await occuranceQueries.findCounts(project.analyses[0].id, "fiveYears");
-  return jsonResponse(toLine(project, toCoalescedCounts(occuranceCounts)));
+
+  const queryPromises = project.analyses.map((analysis) =>
+    occuranceQueries
+      .findCounts(analysis.id, "fiveYears")
+      .then((result) => ({ [analysis.type as AnalysisEnum]: result }))
+  );
+  const occuranceCounts = (await Promise.all(queryPromises)).reduce((acc, curr) => {
+    return { ...acc, ...curr };
+  }, {});
+
+  return jsonResponse(toLine(project, occuranceCounts));
 }

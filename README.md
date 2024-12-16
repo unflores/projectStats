@@ -24,3 +24,10 @@ To do:
 ------
 Add jest
 test / come up with paths for loading state, error state and crit vs non-crit errors in useGet
+
+I want to decide from the creation of the graph data whether to coalesce the data or not
+I want to have the axes on the graphs on the front-end be filled from some lib data structure
+I want to decide what type of graph to use based on the analysis type. Decide on colors to use based on the analysis type too
+Group ingest queries together somewhere better
+Move catching of PrismaClientKnownRequestError to a better place, middlewrae or something
+Give toLine the knowledge of whether or not to coalesce the data
