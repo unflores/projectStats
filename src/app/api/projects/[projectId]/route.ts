@@ -1,6 +1,5 @@
 import { apiValidator } from "@/lib/apiHooks/urls";
 
-import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { type NextRequest } from "next/server";
 import z from "zod";
 import projectQueries from "@/queries/projectQueries";
