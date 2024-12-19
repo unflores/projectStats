@@ -31,17 +31,7 @@ export async function GET(
     return jsonResponse({ error }, 400);
   }
 
-  let project;
-  try {
-    project = await projectQueries.findById(query.projectId);
-  } catch (e) {
-    if (e instanceof PrismaClientKnownRequestError) {
-      return jsonResponse(
-        { error: [{ path: "project", message: "Could not find ressource." }] },
-        404
-      );
-    }
-    throw e;
-  }
+  const project = await projectQueries.findById(query.projectId);
+
   return jsonResponse(toProject(project));
 }
