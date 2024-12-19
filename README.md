@@ -29,5 +29,5 @@ I want to decide from the creation of the graph data whether to coalesce the dat
 I want to have the axes on the graphs on the front-end be filled from some lib data structure
 I want to decide what type of graph to use based on the analysis type. Decide on colors to use based on the analysis type too
 Group ingest queries together somewhere better
-Move catching of PrismaClientKnownRequestError to a better place, middlewrae or something
 Give toLine the knowledge of whether or not to coalesce the data
+Make command-line not depend on case sensitivity
