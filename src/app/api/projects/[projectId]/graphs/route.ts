@@ -1,4 +1,4 @@
-import { AnalysisEnum } from "@/lib/analyses";
+import { AnalysisEnum, Graphs } from "@/lib/analyses";
 import { apiValidator } from "@/lib/apiHooks/urls";
 import moment from "moment";
 import { type NextRequest } from "next/server";
@@ -6,7 +6,6 @@ import z from "zod";
 import projectQueries from "@/queries/projectQueries";
 import occuranceQueries from "@/queries/occurances/countsQueries";
 import { jsonResponse, type JsonResponse } from "@/lib/apiResponses";
-import { toCoalescedCounts } from "@/queries/occurances/utils";
 
 const getParamsValidator = z.object({
   projectId: z.coerce.number(),
@@ -21,14 +20,17 @@ const toLine = (
   project: Awaited<ReturnType<typeof projectQueries.findWithAnalysesBy>>,
   occuranceCounts: FoundOccuranceCounts
 ) => {
-  return project?.analyses.map((analysis) => ({
+  return project.analyses.map((analysis) => ({
     analysis: analysis.type,
-    data: toCoalescedCounts(occuranceCounts[analysis.type]).map(({ count, date }) => ({
-      x: moment(date).format("YYYY-MM-DD"),
-      y: count,
-    })),
+    data: Graphs[analysis.type]
+      .transform(occuranceCounts[analysis.type])
+      .map(({ count, date }) => ({
+        x: moment(date).format("YYYY-MM-DD"),
+        y: count,
+      })),
   }));
 };
+
 export type GraphResponse = ReturnType<typeof toLine>;
 type GetParams = { params: { projectId: number } };
 
