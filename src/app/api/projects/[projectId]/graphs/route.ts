@@ -54,14 +54,9 @@ export async function GET(
     analysisType: query.analysisType,
   });
 
-  const queryPromises = project.analyses.map((analysis) =>
-    occuranceQueries
-      .findCounts(analysis.id, "fiveYears")
-      .then((result) => ({ [analysis.type as AnalysisEnum]: result }))
+  const occuranceCounts = await occuranceQueries.findCounts(
+    project.analyses.map(({ id, type }) => ({ id, type, timeframe: "fiveYears" }))
   );
-  const occuranceCounts = (await Promise.all(queryPromises)).reduce((acc, curr) => {
-    return { ...acc, ...curr };
-  }, {});
 
   return jsonResponse(toLine(project, occuranceCounts));
 }
