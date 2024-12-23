@@ -27,7 +27,7 @@ export const Graphs = {
 type Counts = Array<{ date: Date; count: number }>;
 
 export function toCoalescedCounts(counts: Counts) {
-  return counts.reduce((coalescedCounts, count) => {
+  return counts.reduce<Counts>((coalescedCounts, count) => {
     const lastCount = coalescedCounts[coalescedCounts.length - 1];
 
     if (lastCount === undefined) {
@@ -50,5 +50,5 @@ export function toCoalescedCounts(counts: Counts) {
     } else {
       return [...coalescedCounts, { ...count, count: count.count + lastCount.count }];
     }
-  }, [] as Counts);
+  }, []);
 }
