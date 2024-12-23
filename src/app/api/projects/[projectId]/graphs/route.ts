@@ -1,7 +1,6 @@
 import { AnalysisEnum } from "@/lib/analyses";
 import { apiValidator } from "@/lib/apiHooks/urls";
 import moment from "moment";
-import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { type NextRequest } from "next/server";
 import z from "zod";
 import projectQueries from "@/queries/projectQueries";
@@ -48,21 +47,10 @@ export async function GET(
     return jsonResponse({ error }, 400);
   }
 
-  let project;
-  try {
-    project = await projectQueries.findWithAnalysesBy({
-      id: query.projectId,
-      analysisType: query.analysisType,
-    });
-  } catch (e) {
-    if (e instanceof PrismaClientKnownRequestError) {
-      return jsonResponse(
-        { error: [{ path: "project", message: "Could not find ressource." }] },
-        404
-      );
-    }
-    throw e;
-  }
+  const project = await projectQueries.findWithAnalysesBy({
+    id: query.projectId,
+    analysisType: query.analysisType,
+  });
 
   const queryPromises = project.analyses.map((analysis) =>
     occuranceQueries
