@@ -8,13 +8,13 @@
     "start": "next start",
     "lint": "next lint",
     "occurances:ingest": "npx ts-node ./src/scripts/occurances/ingest.ts",
-    "occurrances:ingest-prod": "dotenv -e .env.prod -- npx ts-node ./src/scripts/occurances/ingest.ts",
+    "occurances:ingest-prod": "dotenv -e .env.prod -- npx ts-node ./src/scripts/occurances/ingest.ts",
     "db:migrate-dev": "prisma migrate dev",
     "db:migrate-prod": "prisma migrate deploy",
     "db:seed": "npx ts-node ./prisma/seed.ts",
     "script": "npx ts-node",
     "prepare": "husky",
-    "test": "jest"
+    "test": "jest --config=./jest.config.js"
   },
   "dependencies": {
     "@carbon/icons-react": "^11.52.0",
@@ -41,6 +41,7 @@
   "devDependencies": {
     "@eslint/js": "^9.15.0",
     "@types/classnames": "^2.3.1",
+    "@types/jest": "^29.5.14",
     "@types/node": "^20",
     "@types/plotly.js": "^2.35.1",
     "@types/react": "^18",
