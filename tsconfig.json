@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "baseUrl": ".",
-    "target": "esnext",
+    "target": "ES2024",
     "lib": [
       "dom",
       "dom.iterable",
@@ -13,24 +13,24 @@
     "noEmit": true,
     "esModuleInterop": true,
     "module": "esnext",
+    "moduleResolution": "node",
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
     "plugins": [
-      {
-        "name": "next"
-      }
+      { "name": "next" }
     ],
     "paths": {
-      "@/*": [
-        "./src/*"
-      ]
-    }
+      "@/*": ["./src/*"]
+    },
+    "resolveJsonModule": true
   },
   "ts-node": {
     "transpileOnly": true,
     "compilerOptions": {
-      "module": "Node16"
+      "module": "NodeNext",
+      "moduleResolution": "NodeNext",
+
     },
     "require": [
       "tsconfig-paths/register"
