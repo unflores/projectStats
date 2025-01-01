@@ -49,8 +49,8 @@ const LineGraph = ({ line, xLabel, yLabel }: Props) => {
           y: line.data.map(({ y }) => y),
           line: { color: line.color },
           name: "deploys",
-          type: "bar",
-          mode: 'lines',
+          type: "scatter",
+          mode: "lines",
           hovertemplate: `${xLabel}: %{x}<br>${yLabel}: %{y}<extra></extra>`
         }
       ]}
