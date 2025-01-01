@@ -12,7 +12,7 @@ export default {
     analysisType,
     ...filters
   }: {
-    analysisType: string;
+    analysisType?: string;
   } & Prisma.ProjectWhereInput) {
     const project = await prisma.project.findFirstOrThrow({
       where: {

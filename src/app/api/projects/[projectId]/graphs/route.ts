@@ -9,14 +9,13 @@ import { jsonResponse, type JsonResponse } from "@/lib/apiResponses";
 
 const getParamsValidator = z.object({
   projectId: z.coerce.number(),
-  analysisType: z.nativeEnum(AnalysisEnum),
 });
 
 type FoundOccuranceCounts = {
   [key: string]: { count: number; date: Date }[];
 };
 
-const toLine = (
+const toGraphs = (
   project: Awaited<ReturnType<typeof projectQueries.findWithAnalysesBy>>,
   occuranceCounts: FoundOccuranceCounts
 ) => {
@@ -31,7 +30,7 @@ const toLine = (
   }));
 };
 
-export type GraphResponse = ReturnType<typeof toLine>;
+export type GraphResponse = ReturnType<typeof toGraphs>;
 type GetParams = { params: { projectId: number } };
 
 export async function GET(
@@ -51,12 +50,11 @@ export async function GET(
 
   const project = await projectQueries.findWithAnalysesBy({
     id: query.projectId,
-    analysisType: query.analysisType,
   });
 
   const occuranceCounts = await occuranceQueries.findCounts(
     project.analyses.map(({ id, type }) => ({ id, type, timeframe: "fiveYears" }))
   );
 
-  return jsonResponse(toLine(project, occuranceCounts));
+  return jsonResponse(toGraphs(project, occuranceCounts));
 }

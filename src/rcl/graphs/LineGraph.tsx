@@ -47,10 +47,11 @@ const LineGraph = ({ line, xLabel, yLabel }: Props) => {
         {
           x: line.data.map(({ x }) => x),
           y: line.data.map(({ y }) => y),
-          line: { color: '#b55400' },
+          line: { color: line.color },
           name: "deploys",
+          type: "bar",
           mode: 'lines',
-          hovertemplate: "x: %{x}<br>y: %{y}<extra></extra>"
+          hovertemplate: `${xLabel}: %{x}<br>${yLabel}: %{y}<extra></extra>`
         }
       ]}
       useResizeHandler={true}
