@@ -3,9 +3,6 @@ import pluginJs from "@eslint/js";
 import tseslint from "typescript-eslint";
 import pluginReact from "eslint-plugin-react";
 
-
-
-
 /** @type {import('eslint').Linter.Config[]} */
 export default [
   {files: ["**/*.{ts,tsx}"]},
@@ -17,6 +14,13 @@ export default [
         project: ["./tsconfig.json"]
       },
     }
+  },
+  {
+    settings: {
+      react: {
+        version: "detect",
+      },
+    },
   },
   {ignores: ['.next/**', '**.config.js', '**/scratch/**']},
   pluginJs.configs.recommended,
