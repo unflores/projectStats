@@ -1,3 +1,4 @@
+import { AnalysisEnum } from "@/lib/analyses";
 import prisma from "@/lib/db";
 import { Prisma } from "@prisma/client";
 
@@ -11,14 +12,22 @@ export default {
     analysisType,
     ...filters
   }: {
-    analysisType: string;
+    analysisType?: string;
   } & Prisma.ProjectWhereInput) {
-    return await prisma.project.findFirstOrThrow({
+    const project = await prisma.project.findFirstOrThrow({
       where: {
         ...filters,
         analyses: analysisType ? { some: { type: analysisType } } : undefined,
       },
       include: { analyses: true },
     });
+
+    return {
+      project,
+      analyses: project.analyses.map((analysis) => ({
+        ...analysis,
+        type: analysis.type as AnalysisEnum,
+      })),
+    };
   },
 };

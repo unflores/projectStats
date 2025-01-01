@@ -26,8 +26,6 @@ const useGet = <T>(
     httpFetcher
   );
 
-  const { data, error, isLoading } = res;
-  console.log({ data, error, isLoading });
   return res;
 };
 
