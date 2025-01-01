@@ -1,4 +1,4 @@
-import { AnalysisEnum, Graphs } from "@/lib/analyses";
+import { Graphs } from "@/lib/analyses";
 import { apiValidator } from "@/lib/apiHooks/urls";
 import moment from "moment";
 import { type NextRequest } from "next/server";
