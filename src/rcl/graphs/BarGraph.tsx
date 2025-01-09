@@ -1,7 +1,6 @@
 import Plot from 'react-plotly.js'
 import { DataSeries } from './graphs';
 
-
 interface Props {
   series: DataSeries;
   xLabel?: string;
@@ -9,7 +8,7 @@ interface Props {
   className?: string;
 }
 
-const LineGraph = ({ series, xLabel, yLabel }: Props) => {
+const BarGraph = ({ series, xLabel, yLabel }: Props) => {
 
   const layout = {
     title: series.id,
@@ -43,7 +42,7 @@ const LineGraph = ({ series, xLabel, yLabel }: Props) => {
           line: { color: series.color },
           name: "deploys",
           type: "scatter",
-          mode: "lines",
+          mode: "delta",
           hovertemplate: `${xLabel}: %{x}<br>${yLabel}: %{y}<extra></extra>`
         }
       ]}
@@ -55,4 +54,4 @@ const LineGraph = ({ series, xLabel, yLabel }: Props) => {
   </div >);
 };
 
-export default LineGraph;
+export default BarGraph;

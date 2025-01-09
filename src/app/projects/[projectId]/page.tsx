@@ -35,7 +35,7 @@ export default function Page() {
         <Title level={1}>{project.name}</Title>
         <div className="flex flex-col min-h-screen p-5">
           {graphs.map(({ analysis, data }) => (
-            <LineGraph key={analysis} className="h-[400px]" line={{ id: analysis, color: Graphs[analysis].color, data }} xLabel={Graphs[analysis].xLabel} yLabel={Graphs[analysis].yLabel} />
+            <LineGraph key={analysis} className="h-[400px]" series={{ id: analysis, color: Graphs[analysis].color, data }} xLabel={Graphs[analysis].xLabel} yLabel={Graphs[analysis].yLabel} />
           ))}
         </div>
       </Card>
