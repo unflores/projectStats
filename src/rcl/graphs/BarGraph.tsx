@@ -11,7 +11,7 @@ interface Props {
 const BarGraph = ({ series, xLabel, yLabel }: Props) => {
 
   const layout = {
-    title: series.id,
+    title: series.analysis,
     uirevision: 'true',
     xaxis: {
       title: {
@@ -41,8 +41,8 @@ const BarGraph = ({ series, xLabel, yLabel }: Props) => {
           y: series.data.map(({ y }) => y),
           line: { color: series.color },
           name: "deploys",
-          type: "scatter",
-          mode: "delta",
+          type: "bar",
+          mode: "gauge",
           hovertemplate: `${xLabel}: %{x}<br>${yLabel}: %{y}<extra></extra>`
         }
       ]}

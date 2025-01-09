@@ -12,7 +12,7 @@ interface Props {
 const LineGraph = ({ series, xLabel, yLabel }: Props) => {
 
   const layout = {
-    title: series.id,
+    title: series.analysis,
     uirevision: 'true',
     xaxis: {
       title: {
