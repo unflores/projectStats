@@ -10,17 +10,32 @@ export const Graphs = {
     transform: toCoalescedCounts,
   },
   [AnalysisEnum.LOCChanged]: {
-    transform: (counts: Counts) => counts,
+    transform: toMonthlyCounts,
   },
   [AnalysisEnum.LOCAdded]: {
-    transform: (counts: Counts) => counts,
+    transform: toMonthlyCounts,
   },
   [AnalysisEnum.LOCRemoved]: {
-    transform: (counts: Counts) => counts,
+    transform: toMonthlyCounts,
   },
 };
 
 type Counts = Array<{ date: Date; count: number }>;
+export function toMonthlyCounts(counts: Counts) {
+  return counts.reduce<Counts>((monthlyCounts, count) => {
+    const lastCount = monthlyCounts[monthlyCounts.length - 1];
+    const previousCounts = monthlyCounts.slice(0, -1);
+    if (!lastCount) {
+      return [count];
+    }
+
+    if (lastCount.date.getMonth() < count.date.getMonth()) {
+      return [...previousCounts, lastCount, count];
+    } else {
+      return [...previousCounts, count];
+    }
+  }, []);
+}
 
 export function toCoalescedCounts(counts: Counts) {
   return counts.reduce<Counts>((coalescedCounts, count) => {
