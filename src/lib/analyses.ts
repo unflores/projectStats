@@ -10,13 +10,13 @@ export const Graphs = {
     transform: toCoalescedCounts,
   },
   [AnalysisEnum.LOCChanged]: {
-    transform: toMonthlyCounts,
+    transform: (counts: Counts) => counts,
   },
   [AnalysisEnum.LOCAdded]: {
-    transform: toMonthlyCounts,
+    transform: (counts: Counts) => counts,
   },
   [AnalysisEnum.LOCRemoved]: {
-    transform: toMonthlyCounts,
+    transform: (counts: Counts) => counts,
   },
 };
 
