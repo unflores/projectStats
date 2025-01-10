@@ -32,7 +32,7 @@ function buildZeroedMonths(currentDate: Date, size: number) {
   const currentday = dayjs(currentDate);
   const zeroedMonths: Counts = [];
 
-  for (let month = 0; month < size; month++) {
+  for (let month = 1; month <= size; month++) {
     zeroedMonths.push({
       date: currentday.utc().add(month, "month").startOf("month").toDate(),
       count: 0,
@@ -53,10 +53,7 @@ export function toCoalescedCounts(counts: Counts) {
       if (count.date.getMonth() - lastCount.date.getMonth() > 1) {
         return [
           ...coalescedCounts,
-          ...buildZeroedMonths(
-            lastCount.date,
-            count.date.getMonth() - lastCount.date.getMonth() - 1
-          ),
+          ...buildZeroedMonths(lastCount.date, count.date.getMonth() - lastCount.date.getMonth()),
           count,
         ];
       } else {
