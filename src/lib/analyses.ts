@@ -1,3 +1,5 @@
+import day from "./day";
+
 export enum AnalysisEnum {
   ReleaseCandidates = "ReleaseCandidates",
   LOCChanged = "LOCChanged",
@@ -22,6 +24,23 @@ export const Graphs = {
 
 type Counts = Array<{ date: Date; count: number }>;
 
+function buildZeroedMonths(currentDate: Date, nextDate: Date, size: number) {
+  const currentday = day(currentDate);
+  const nextDay = day(nextDate);
+  const zeroedMonths: Counts = [];
+
+  for (let month = 1; month <= size; month++) {
+    if (nextDay.date() === 1 && month === size) {
+      break;
+    }
+    zeroedMonths.push({
+      date: currentday.utc().add(month, "month").startOf("month").toDate(),
+      count: 0,
+    });
+  }
+  return zeroedMonths;
+}
+
 export function toCoalescedCounts(counts: Counts) {
   return counts.reduce<Counts>((coalescedCounts, count) => {
     const lastCount = coalescedCounts[coalescedCounts.length - 1];
@@ -34,10 +53,11 @@ export function toCoalescedCounts(counts: Counts) {
       if (count.date.getMonth() - lastCount.date.getMonth() > 1) {
         return [
           ...coalescedCounts,
-          {
-            date: new Date(lastCount.date.getFullYear(), lastCount.date.getMonth() + 1, 1),
-            count: 0,
-          },
+          ...buildZeroedMonths(
+            lastCount.date,
+            count.date,
+            count.date.getMonth() - lastCount.date.getMonth()
+          ),
           count,
         ];
       } else {

@@ -22,6 +22,7 @@
     "@prisma/client": "5.22.0",
     "@tmcw/togeojson": "^5.8.1",
     "classnames": "^2.5.1",
+    "dayjs": "^1.11.13",
     "eslint-plugin-next": "^0.0.0",
     "jszip": "^3.10.1",
     "moment": "^2.30.1",
