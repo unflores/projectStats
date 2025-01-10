@@ -1,8 +1,4 @@
-import dayjs from "dayjs";
-import utc from "dayjs/plugin/utc";
-import timezone from "dayjs/plugin/timezone";
-dayjs.extend(utc);
-dayjs.extend(timezone);
+import day from "./day";
 
 export enum AnalysisEnum {
   ReleaseCandidates = "ReleaseCandidates",
@@ -28,11 +24,15 @@ export const Graphs = {
 
 type Counts = Array<{ date: Date; count: number }>;
 
-function buildZeroedMonths(currentDate: Date, size: number) {
-  const currentday = dayjs(currentDate);
+function buildZeroedMonths(currentDate: Date, nextDate: Date, size: number) {
+  const currentday = day(currentDate);
+  const nextDay = day(nextDate);
   const zeroedMonths: Counts = [];
 
   for (let month = 1; month <= size; month++) {
+    if (nextDay.date() === 1 && month === size) {
+      break;
+    }
     zeroedMonths.push({
       date: currentday.utc().add(month, "month").startOf("month").toDate(),
       count: 0,
@@ -53,7 +53,11 @@ export function toCoalescedCounts(counts: Counts) {
       if (count.date.getMonth() - lastCount.date.getMonth() > 1) {
         return [
           ...coalescedCounts,
-          ...buildZeroedMonths(lastCount.date, count.date.getMonth() - lastCount.date.getMonth()),
+          ...buildZeroedMonths(
+            lastCount.date,
+            count.date,
+            count.date.getMonth() - lastCount.date.getMonth()
+          ),
           count,
         ];
       } else {
