@@ -6,7 +6,6 @@ import useGet from "@/lib/apiHooks/useGet";
 import { GraphResponse } from "@/app/api/projects/[projectId]/graphs/route";
 import { useParams } from "next/navigation";
 import { ProjectResponse } from "@/app/api/projects/[projectId]/route";
-import { Graphs } from "@/lib/analyses";
 import GraphRenderer from "@/rcl/graphs/GraphRenderer";
 
 export default function Page() {
@@ -39,7 +38,7 @@ export default function Page() {
             <GraphRenderer
               key={analysis}
               className="h-[400px]"
-              series={{ analysis, color: Graphs[analysis].color, data }}
+              series={{ analysis, data }}
             />
           ))}
         </div>

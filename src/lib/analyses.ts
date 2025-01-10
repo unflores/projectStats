@@ -7,28 +7,16 @@ export enum AnalysisEnum {
 
 export const Graphs = {
   [AnalysisEnum.ReleaseCandidates]: {
-    color: "#b55400",
-    xLabel: "Date",
-    yLabel: "RCs",
     transform: toCoalescedCounts,
   },
   [AnalysisEnum.LOCChanged]: {
-    color: "#b55400",
-    xLabel: "Date",
-    yLabel: "Changes",
-    transform: (counts: Counts) => counts,
+    transform: toMonthlyCounts,
   },
   [AnalysisEnum.LOCAdded]: {
-    color: "#00b554",
-    xLabel: "Date",
-    yLabel: "Lines Added",
-    transform: (counts: Counts) => counts,
+    transform: toMonthlyCounts,
   },
   [AnalysisEnum.LOCRemoved]: {
-    color: "#00b554",
-    xLabel: "Date",
-    yLabel: "Lines Removed",
-    transform: (counts: Counts) => counts,
+    transform: toMonthlyCounts,
   },
 };
 

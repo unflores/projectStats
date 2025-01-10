@@ -5,10 +5,11 @@ interface Props {
   series: DataSeries;
   xLabel?: string;
   yLabel?: string;
+  color: string;
   className?: string;
 }
 
-const BarGraph = ({ series, xLabel, yLabel }: Props) => {
+const BarGraph = ({ series, xLabel, yLabel, color }: Props) => {
 
   const layout = {
     title: series.analysis,
@@ -39,7 +40,7 @@ const BarGraph = ({ series, xLabel, yLabel }: Props) => {
         {
           x: series.data.map(({ x }) => x),
           y: series.data.map(({ y }) => y),
-          line: { color: series.color },
+          line: { color },
           name: "deploys",
           type: "bar",
           mode: "gauge",

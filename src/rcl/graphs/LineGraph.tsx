@@ -7,9 +7,10 @@ interface Props {
   xLabel?: string;
   yLabel?: string;
   className?: string;
+  color: string;
 }
 
-const LineGraph = ({ series, xLabel, yLabel }: Props) => {
+const LineGraph = ({ series, xLabel, yLabel, color }: Props) => {
 
   const layout = {
     title: series.analysis,
@@ -40,7 +41,7 @@ const LineGraph = ({ series, xLabel, yLabel }: Props) => {
         {
           x: series.data.map(({ x }) => x),
           y: series.data.map(({ y }) => y),
-          line: { color: series.color },
+          line: { color: color },
           name: "deploys",
           type: "scatter",
           mode: "lines",
