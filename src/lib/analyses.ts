@@ -49,22 +49,14 @@ export function toCoalescedCounts(counts: Counts) {
       return [count];
     }
 
-    if (lastCount.date.getMonth() < count.date.getMonth()) {
-      if (count.date.getMonth() - lastCount.date.getMonth() > 1) {
-        return [
-          ...coalescedCounts,
-          ...buildZeroedMonths(
-            lastCount.date,
-            count.date,
-            count.date.getMonth() - lastCount.date.getMonth()
-          ),
-          count,
-        ];
-      } else {
-        return [...coalescedCounts, count];
-      }
-    } else {
-      return [...coalescedCounts, { ...count, count: count.count + lastCount.count }];
+    const monthDiff = count.date.getMonth() - lastCount.date.getMonth();
+
+    if (monthDiff > 0) {
+      const zeroedMonths =
+        monthDiff > 1 ? buildZeroedMonths(lastCount.date, count.date, monthDiff) : [];
+      return [...coalescedCounts, ...zeroedMonths, count];
     }
+
+    return [...coalescedCounts, { ...count, count: count.count + lastCount.count }];
   }, []);
 }
