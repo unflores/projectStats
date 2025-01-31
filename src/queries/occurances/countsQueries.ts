@@ -8,7 +8,7 @@ async function findCountsById(analysisId: number, timeframe: TimeFrames) {
 
   return (await prisma.$queryRaw`
     SELECT
-      DATE(occurred_at) as date,
+      DATE(occurred_at)::timestamp as date,
       SUM(amount)::INT as count,
       a.id
     FROM occurances o

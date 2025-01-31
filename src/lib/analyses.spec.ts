@@ -46,6 +46,16 @@ describe("toCoalescedCounts", () => {
     expect(coalescedCounts[3].count).toEqual(1);
   });
 
+  it("resets count of first of month when a month", () => {
+    const counts = [
+      { date: new Date("2023-12-31"), count: 41 },
+      { date: new Date("2024-01-01"), count: 1 },
+    ];
+    const coalescedCounts = toCoalescedCounts(counts);
+    expect(coalescedCounts[0].count).toEqual(41);
+    expect(coalescedCounts[1].count).toEqual(1);
+  });
+
   it("sets count to 0 for multiple missing months", () => {
     const counts = [
       { date: new Date("2024-01-01"), count: 41 },
