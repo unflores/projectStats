@@ -49,8 +49,9 @@ export function toCoalescedCounts(counts: Counts) {
       return [count];
     }
 
-    const monthDiff = count.date.getMonth() - lastCount.date.getMonth();
-
+    const monthDiff = day(count.date)
+      .startOf("month")
+      .diff(day(lastCount.date).startOf("month"), "month");
     if (monthDiff > 0) {
       const zeroedMonths =
         monthDiff > 1 ? buildZeroedMonths(lastCount.date, count.date, monthDiff) : [];
