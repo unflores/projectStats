@@ -3,8 +3,8 @@ import { toCoalescedCounts } from "./analyses";
 describe("toCoalescedCounts", () => {
   it("adds counts of previous day to the next day in same month", () => {
     const counts = [
-      { date: new Date("2024-01-01"), count: 41 },
-      { date: new Date("2024-01-02"), count: 1 },
+      { date: "2024-01-01", count: 41 },
+      { date: "2024-01-02", count: 1 },
     ];
     const coalescedCounts = toCoalescedCounts(counts);
 
@@ -14,8 +14,8 @@ describe("toCoalescedCounts", () => {
 
   it("does NOT add count of previous day to the next day in new month", () => {
     const counts = [
-      { date: new Date("2024-01-01"), count: 41 },
-      { date: new Date("2024-02-01"), count: 1 },
+      { date: "2024-01-01", count: 41 },
+      { date: "2024-02-01", count: 1 },
     ];
     const coalescedCounts = toCoalescedCounts(counts);
 
@@ -25,8 +25,8 @@ describe("toCoalescedCounts", () => {
 
   it("does NOT reset count of first of month when a month has a value on the first of the month", () => {
     const counts = [
-      { date: new Date("2024-01-01"), count: 41 },
-      { date: new Date("2024-03-01"), count: 1 },
+      { date: "2024-01-01", count: 41 },
+      { date: "2024-03-01", count: 1 },
     ];
     const coalescedCounts = toCoalescedCounts(counts);
     expect(coalescedCounts[0].count).toEqual(41);
@@ -36,8 +36,8 @@ describe("toCoalescedCounts", () => {
 
   it("resets count of first of month when a month is skipped", () => {
     const counts = [
-      { date: new Date("2024-01-01"), count: 41 },
-      { date: new Date("2024-03-10"), count: 1 },
+      { date: "2024-01-01", count: 41 },
+      { date: "2024-03-10", count: 1 },
     ];
     const coalescedCounts = toCoalescedCounts(counts);
     expect(coalescedCounts[0].count).toEqual(41);
@@ -48,8 +48,8 @@ describe("toCoalescedCounts", () => {
 
   it("resets count of first of month when a month", () => {
     const counts = [
-      { date: new Date("2023-12-31"), count: 41 },
-      { date: new Date("2024-01-01"), count: 1 },
+      { date: "2023-12-31", count: 41 },
+      { date: "2024-01-01", count: 1 },
     ];
     const coalescedCounts = toCoalescedCounts(counts);
     expect(coalescedCounts[0].count).toEqual(41);
@@ -58,8 +58,8 @@ describe("toCoalescedCounts", () => {
 
   it("sets count to 0 for multiple missing months", () => {
     const counts = [
-      { date: new Date("2024-01-01"), count: 41 },
-      { date: new Date("2024-04-10"), count: 1 },
+      { date: "2024-01-01", count: 41 },
+      { date: "2024-04-10", count: 1 },
     ];
 
     const coalescedCounts = toCoalescedCounts(counts);
