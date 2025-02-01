@@ -12,7 +12,7 @@ const getParamsValidator = z.object({
 });
 
 type FoundOccuranceCounts = {
-  [key: string]: { count: number; date: Date }[];
+  [key: string]: { count: number; date: string }[];
 };
 
 const toGraphs = (

@@ -22,9 +22,9 @@ export const Graphs = {
   },
 };
 
-type Counts = Array<{ date: Date; count: number }>;
+type Counts = Array<{ date: string; count: number }>;
 
-function buildZeroedMonths(currentDate: Date, nextDate: Date, size: number) {
+function buildZeroedMonths(currentDate: string, nextDate: string, size: number) {
   const currentday = day(currentDate);
   const nextDay = day(nextDate);
   const zeroedMonths: Counts = [];
@@ -34,7 +34,7 @@ function buildZeroedMonths(currentDate: Date, nextDate: Date, size: number) {
       break;
     }
     zeroedMonths.push({
-      date: currentday.utc().add(month, "month").startOf("month").toDate(),
+      date: currentday.utc().add(month, "month").startOf("month").toISOString(),
       count: 0,
     });
   }
