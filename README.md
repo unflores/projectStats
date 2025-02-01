@@ -22,7 +22,6 @@ xdg-open http://localhost:3000
 
 To do:
 ------
-switch from returning dates to strings in the api, make it iso whatever and turn them into strings.
 Add jest
 test / come up with paths for loading state, error state and crit vs non-crit errors in useGet
 
