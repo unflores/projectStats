@@ -7,7 +7,7 @@ export enum AnalysisEnum {
   LOCRemoved = "LOCRemoved",
 }
 
-export const Graphs = {
+export const Graphs: Record<AnalysisEnum, { transform: (counts: Counts) => Counts }> = {
   [AnalysisEnum.ReleaseCandidates]: {
     transform: toCoalescedCounts,
   },
