@@ -1,4 +1,25 @@
-import { toCoalescedCounts } from "./analyses";
+import { toCoalescedCounts, toMonthlyBucketedCounts } from "./analyses";
+
+describe("toMonthlyBucketedCounts", () => {
+  it("adds counts for a given month", () => {
+    const counts = [
+      { date: "2024-01-01", count: 41 },
+      { date: "2024-01-02", count: 1 },
+    ];
+    const monthlyCounts = toMonthlyBucketedCounts(counts);
+    expect(monthlyCounts[0].count).toEqual(42);
+  });
+
+  it("splits counts by month", () => {
+    const counts = [
+      { date: "2024-01-01", count: 41 },
+      { date: "2024-02-02", count: 1 },
+    ];
+    const monthlyCounts = toMonthlyBucketedCounts(counts);
+    expect(monthlyCounts[0].count).toEqual(41);
+    expect(monthlyCounts[1].count).toEqual(1);
+  });
+});
 
 describe("toCoalescedCounts", () => {
   it("adds counts of previous day to the next day in same month", () => {
