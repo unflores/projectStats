@@ -12,13 +12,13 @@ export const Graphs: Record<AnalysisEnum, { transform: (counts: Counts) => Count
     transform: toCoalescedCounts,
   },
   [AnalysisEnum.LOCChanged]: {
-    transform: (counts: Counts) => counts,
+    transform: toMonthlyBucketedCounts,
   },
   [AnalysisEnum.LOCAdded]: {
-    transform: (counts: Counts) => counts,
+    transform: toMonthlyBucketedCounts,
   },
   [AnalysisEnum.LOCRemoved]: {
-    transform: (counts: Counts) => counts,
+    transform: toMonthlyBucketedCounts,
   },
 };
 
@@ -39,6 +39,27 @@ function buildZeroedMonths(currentDate: string, nextDate: string, size: number) 
     });
   }
   return zeroedMonths;
+}
+
+export function toMonthlyBucketedCounts(counts: Counts) {
+  return counts.reduce<Counts>((bucketedCounts, count) => {
+    count.date = day(count.date).startOf("month").format("YYYY-MM");
+
+    const [theBucketedCounts, lastCount] = [
+      bucketedCounts.slice(0, bucketedCounts.length - 1),
+      bucketedCounts.slice(bucketedCounts.length - 1)[0],
+    ];
+
+    if (lastCount === undefined) {
+      return [count];
+    }
+    lastCount.date = day(lastCount.date).startOf("month").format("YYYY-MM");
+
+    if (lastCount.date === count.date) {
+      return [...theBucketedCounts, { ...count, count: count.count + lastCount.count }];
+    }
+    return [...theBucketedCounts, lastCount, count];
+  }, []);
 }
 
 export function toCoalescedCounts(counts: Counts) {
