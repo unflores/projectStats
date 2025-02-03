@@ -15,10 +15,10 @@ datasource db {
 
 model Project {
   id        Int      @id @default(autoincrement())
-  createdAt DateTime @map("created_at") @default(now())
-  updatedAt DateTime @map("updated_at") @updatedAt
   analyses  Analysis[]
   name      String
+  createdAt DateTime @map("created_at") @default(now())
+  updatedAt DateTime @map("updated_at") @updatedAt
 
   @@unique([name])
   @@map("projects")
@@ -26,15 +26,16 @@ model Project {
 
 model Analysis {
   id         Int      @id @default(autoincrement())
-  createdAt  DateTime @map("created_at") @default(now())
-  updatedAt  DateTime @map("updated_at") @updatedAt
+  segment    String?   @map("segment")
   type       String
   projectId  Int      @map("project_id")
   project    Project  @relation(fields: [projectId], references: [id])
   occurances Occurance[]
+  createdAt  DateTime @map("created_at") @default(now())
+  updatedAt  DateTime @map("updated_at") @updatedAt
 
   @@index([projectId])
-  @@unique([projectId, type])
+  @@unique([projectId, type, segment])
   @@map("analyses")
 }
 
@@ -42,11 +43,11 @@ model Occurance {
   id         Int      @id @default(autoincrement())
   amount     Int      @map("amount") @default(1)
   externalId String   @map("external_id")
-  createdAt  DateTime @map("created_at") @default(now())
-  updatedAt  DateTime @map("updated_at") @updatedAt
   occurredAt DateTime @map("occurred_at")
   analysisId Int      @map("analysis_id")
   analysis   Analysis @relation(fields: [analysisId], references: [id])
+  createdAt  DateTime @map("created_at") @default(now())
+  updatedAt  DateTime @map("updated_at") @updatedAt
 
   @@unique([analysisId, externalId])
   @@index([occurredAt])
