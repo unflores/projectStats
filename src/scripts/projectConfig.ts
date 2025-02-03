@@ -14,6 +14,7 @@ const projectConfigSchema = z.record(
         absDirectory: z.string(),
       })
       .optional(),
+    language: z.string().optional(),
   })
 );
 
@@ -26,6 +27,19 @@ class ProjectConfig {
 
   git(projectName: string) {
     return this.config[projectName]?.git;
+  }
+
+  language(projectName: string) {
+    return this.config[projectName]?.language;
+  }
+
+  fileRegex(projectName: string) {
+    if (this.config[projectName]?.language === "typescript") {
+      return ".tsx?";
+    } else if (this.config[projectName]?.language === "ruby") {
+      return ".rb";
+    }
+    return;
   }
 
   projects() {
