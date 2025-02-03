@@ -1,5 +1,9 @@
 import { z } from "zod";
 
+// This is a user provided config file, so require it dynamically
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const projectConfigJson = require("./occurances/projectConfig.json");
+
 const projectConfigSchema = z.record(
   z.object({
     github: z
@@ -14,7 +18,7 @@ const projectConfigSchema = z.record(
         absDirectory: z.string(),
       })
       .optional(),
-    language: z.string().optional(),
+    languages: z.array(z.string()).optional(),
   })
 );
 
@@ -29,17 +33,15 @@ class ProjectConfig {
     return this.config[projectName]?.git;
   }
 
-  language(projectName: string) {
-    return this.config[projectName]?.language;
-  }
-
-  fileRegex(projectName: string) {
-    if (this.config[projectName]?.language === "typescript") {
-      return ".tsx?";
-    } else if (this.config[projectName]?.language === "ruby") {
-      return ".rb";
-    }
-    return;
+  languageRegexes(projectName: string) {
+    return (this.config[projectName]?.languages || []).map((language) => {
+      if (language === "typescript") {
+        return { language, regex: ".tsx?" };
+      } else if (language === "ruby") {
+        return { language, regex: ".rb" };
+      }
+      return { language, regex: undefined };
+    });
   }
 
   projects() {
@@ -49,7 +51,7 @@ class ProjectConfig {
 
 let instance: ProjectConfig | null = null;
 
-export const buildConfig = (configJson: unknown) => {
+export const buildConfig = (configJson: unknown = projectConfigJson) => {
   instance = new ProjectConfig(configJson);
   return instance;
 };

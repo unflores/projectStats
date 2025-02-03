@@ -2,6 +2,7 @@
   "projectStats": {
     "git":{
       "absDirectory": "<current dir>"
-    }
+    },
+    "languages": ["typescript"]
   }
 }
