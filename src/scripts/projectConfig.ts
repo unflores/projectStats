@@ -46,7 +46,7 @@ class ProjectConfig {
   }
 
   projectDir(projectName: string) {
-    return this.config[projectName]?.projectDir;
+    return this.config[projectName]?.projectDir ?? "";
   }
 
   projects() {
