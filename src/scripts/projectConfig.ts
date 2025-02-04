@@ -19,6 +19,7 @@ const projectConfigSchema = z.record(
       })
       .optional(),
     languages: z.array(z.string()).optional(),
+    projectDir: z.string().optional(),
   })
 );
 
@@ -42,6 +43,10 @@ class ProjectConfig {
       }
       return { language, regex: undefined };
     });
+  }
+
+  projectDir(projectName: string) {
+    return this.config[projectName]?.projectDir;
   }
 
   projects() {
