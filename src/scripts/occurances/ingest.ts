@@ -22,11 +22,14 @@ const response = z
         message: `Invalid processor name. Possible values: (${Object.keys(AvailableProcessorEnum).join("|")})`,
       }),
     }),
-    projectName: z.string({
-      errorMap: () => ({
-        message: `Project name is required. Possible values: (${projectConfig.projects().join("|")})`,
+    projectName: z
+      .string({
+        required_error: `Project name is required. Possible values: (${projectConfig.projects().join("|")})`,
+        invalid_type_error: `Project name must be a string. Possible values: (${projectConfig.projects().join("|")})`,
+      })
+      .min(1, {
+        message: `Project name cannot be empty. Possible values: (${projectConfig.projects().join("|")})`,
       }),
-    }),
   })
   .safeParse(program.opts());
 

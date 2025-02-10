@@ -2,7 +2,8 @@ import { z } from "zod";
 
 // This is a user provided config file, so require it dynamically
 // eslint-disable-next-line @typescript-eslint/no-require-imports
-const projectConfigJson = require("./occurances/projectConfig.json");
+const projectConfigJson = require("./projects.json");
+// todo: when this file isn't present, it should fail gracefully, throw an error that makes sense
 
 const projectConfigSchema = z.record(
   z.object({
@@ -34,7 +35,7 @@ class ProjectConfig {
     return this.config[projectName]?.git;
   }
 
-  languageRegexes(projectName: string) {
+  languageRegexes(projectName: string): { language: string; regex: string | undefined }[] {
     return (this.config[projectName]?.languages || []).map((language) => {
       if (language === "typescript") {
         return { language, regex: ".tsx?" };
