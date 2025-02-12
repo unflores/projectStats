@@ -4,7 +4,6 @@ import { z } from "zod";
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const projectConfigJson = require("./projects.json");
 // todo: when this file isn't present, it should fail gracefully, throw an error that makes sense
-
 const projectConfigSchema = z.record(
   z.object({
     github: z

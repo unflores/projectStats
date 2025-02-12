@@ -9,12 +9,12 @@ const mainBranchNames = ["main", "master"];
 // extract commitsTraverser
 class LOCLanguagesProcessor implements Processor {
   absPath: string;
-  languageRegexes: { language: string; regex: string }[];
+  languageRegexes: { language: string; regex: string | undefined }[];
   projectDir: string;
   constructor(
     absPath: string,
     projectDir: string,
-    languageRegexes: { language: string; regex: string }[]
+    languageRegexes: { language: string; regex: string | undefined }[]
   ) {
     this.absPath = absPath;
     this.projectDir = projectDir;
@@ -29,17 +29,21 @@ class LOCLanguagesProcessor implements Processor {
     const commands = {
       branchName: "rev-parse --abbrev-ref HEAD",
       loc: "log --pretty=oneline --no-merges | awk -F\" \" '{print $1}'",
-      findLoc: `find ${this.absPath}/${this.projectDir} -name '*.ts*' | xargs wc -l`,
+      findLoc: `find ${this.absPath}/${this.projectDir} -name '*.ts*' | xargs wc -l | tail -n1 | awk '{print $1}'`,
     };
     return commands[command];
   }
 
   async buildOccurances() {
-    const currentBranchName = execSync(`git -C ${this.absPath} ${this.command("branchName")}`);
-    if (mainBranchNames.includes(currentBranchName.toString().trim())) {
-      // This sucks so much, make a common Application error class to handle this.
-      throw new Error(`The repo is not on the main branch, change it from ${currentBranchName}`);
-    }
+    const currentBranchName = execSync(`git -C ${this.absPath} ${this.command("branchName")}`)
+      .toString()
+      .trim();
+
+    // if (!mainBranchNames.includes(currentBranchName)) {
+    //   // This sucks so much, make a common Application error class to handle this.
+    //   throw new Error(`The repo is not on the main branch, change it from ${currentBranchName}`);
+    // }
+    const mainBranchName = currentBranchName;
 
     const commitsResponse = await asyncExec(
       `git -C ${this.absPath} ${this.command("loc")}`,
@@ -48,16 +52,26 @@ class LOCLanguagesProcessor implements Processor {
     const commits = commitsResponse.stdout.toString().trim().split("\n");
 
     const commitsTraversed = 0;
-    while (commitsTraversed <= commits.length) {
-      const commitHash = commits[commitsTraversed];
-      execSync(`git -C ${this.absPath} checkout ${commitHash}`);
-      const locResponse = execSync(this.command("findLoc"));
-      const loc = locResponse.toString().trim().split("\n");
+    try {
+      while (commitsTraversed <= commits.length) {
+        const commitHash = commits[commitsTraversed];
+        execSync(`git -C ${this.absPath} checkout ${commitHash}`);
+        const locResponse = execSync(this.command("findLoc"));
 
-      // add to occurances
-      // increment commitsTraversed
+        const loc = locResponse.toString().trim().split("\n");
+
+        // add to occurances
+        // increment commitsTraversed
+      }
+    } catch (error) {
+      console.error(error);
+      // this doesn't work for ctrl + c, it must be in process.on
+      execSync(`git -C ${this.absPath} checkout ${mainBranchName}`);
+    } finally {
+      // Ensure we always return to the main branch, even if interrupted
+      execSync(`git -C ${this.absPath} checkout ${mainBranchName}`);
     }
-
+    execSync(`git -C ${this.absPath} checkout ${mainBranchName}`);
     return [];
   }
 }
