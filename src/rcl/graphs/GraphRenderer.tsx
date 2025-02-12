@@ -7,6 +7,7 @@ const graphMap = {
   [AnalysisEnum.LOCChanged]: BarGraph,
   [AnalysisEnum.LOCAdded]: BarGraph,
   [AnalysisEnum.LOCRemoved]: BarGraph,
+  [AnalysisEnum.LOCLanguage]: LineGraph,
   [AnalysisEnum.ReleaseCandidates]: LineGraph,
 };
 
@@ -30,6 +31,11 @@ const Graphs = {
     color: "#00b554",
     xLabel: "Date",
     yLabel: "Lines Removed",
+  },
+  [AnalysisEnum.LOCLanguage]: {
+    color: "#00b554",
+    xLabel: "Date",
+    yLabel: "LOC",
   },
 };
 

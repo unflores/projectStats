@@ -6,11 +6,8 @@ import { buildProcessor } from "./buildProcessor";
 import logger from "@/lib/logger";
 import prisma from "@/lib/db";
 import { buildConfig } from "@/scripts/projectConfig";
-// This is a user provided config file, so require it dynamically
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-const projectConfigJson = require("../config.json");
 
-const projectConfig = buildConfig(projectConfigJson);
+const projectConfig = buildConfig();
 
 const program = new Command();
 program.version("0.0.1");
@@ -25,11 +22,14 @@ const response = z
         message: `Invalid processor name. Possible values: (${Object.keys(AvailableProcessorEnum).join("|")})`,
       }),
     }),
-    projectName: z.string({
-      errorMap: () => ({
-        message: `Project name is required. Possible values: (${projectConfig.projects().join("|")})`,
+    projectName: z
+      .string({
+        required_error: `Project name is required. Possible values: (${projectConfig.projects().join("|")})`,
+        invalid_type_error: `Project name must be a string. Possible values: (${projectConfig.projects().join("|")})`,
+      })
+      .min(1, {
+        message: `Project name cannot be empty. Possible values: (${projectConfig.projects().join("|")})`,
       }),
-    }),
   })
   .safeParse(program.opts());
 

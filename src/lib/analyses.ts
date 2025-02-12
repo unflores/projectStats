@@ -5,6 +5,7 @@ export enum AnalysisEnum {
   LOCChanged = "LOCChanged",
   LOCAdded = "LOCAdded",
   LOCRemoved = "LOCRemoved",
+  LOCLanguage = "LOCLanguage",
 }
 
 export const Graphs: Record<AnalysisEnum, { transform: (counts: Counts) => Counts }> = {
@@ -19,6 +20,9 @@ export const Graphs: Record<AnalysisEnum, { transform: (counts: Counts) => Count
   },
   [AnalysisEnum.LOCRemoved]: {
     transform: toMonthlyBucketedCounts,
+  },
+  [AnalysisEnum.LOCLanguage]: {
+    transform: (counts: Counts) => counts,
   },
 };
 

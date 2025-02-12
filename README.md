@@ -7,10 +7,10 @@ pnpm install
 docker compose up
 
 # Add a basic config
-cp ./config.json.example ./src/scripts/config.json
+cp ./projects.json.example ./src/scripts/projects.json
 
 # Use the current project as the default
-sed -i "s|<current dir>|$(pwd)|g" ./src/scripts/config.json
+sed -i "s|<current dir>|$(pwd)|g" ./src/scripts/projects.json
 
 # Fetch the occurances for the processor
 pnpm run occurances:ingest --processorName ReleaseCandidates --projectName projectStats
