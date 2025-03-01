@@ -47,9 +47,17 @@ if (response.error) {
 }
 
 const { processorName, projectName } = response.data;
+const processor = buildProcessor(processorName, projectName);
+
+const cleanup = async () => {
+  if (processor?.cleanup) {
+    await processor.cleanup();
+  } else {
+    logger.log("No cleanup function provided");
+  }
+};
 
 const main = async () => {
-  const processor = buildProcessor(processorName, projectName);
   const occurances = await processor.buildOccurances();
 
   const project = await prisma.project.upsert({
@@ -95,4 +103,4 @@ const main = async () => {
   logger.log({ parsed: occurances.length, imported: results.count });
 };
 
-runScript(main);
+runScript(main, cleanup);

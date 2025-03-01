@@ -11,6 +11,8 @@ class LOCLanguagesProcessor implements Processor {
   absPath: string;
   languageRegexes: { language: string; regex: string | undefined }[];
   projectDir: string;
+  mainBranchName: string | undefined;
+
   constructor(
     absPath: string,
     projectDir: string,
@@ -34,6 +36,10 @@ class LOCLanguagesProcessor implements Processor {
     return commands[command];
   }
 
+  async cleanup() {
+    execSync(`git -C ${this.absPath} checkout ${this.mainBranchName}`);
+  }
+
   async buildOccurances() {
     const currentBranchName = execSync(`git -C ${this.absPath} ${this.command("branchName")}`)
       .toString()
@@ -43,7 +49,7 @@ class LOCLanguagesProcessor implements Processor {
     //   // This sucks so much, make a common Application error class to handle this.
     //   throw new Error(`The repo is not on the main branch, change it from ${currentBranchName}`);
     // }
-    const mainBranchName = currentBranchName;
+    this.mainBranchName = currentBranchName;
 
     const commitsResponse = await asyncExec(
       `git -C ${this.absPath} ${this.command("loc")}`,

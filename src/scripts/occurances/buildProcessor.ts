@@ -1,10 +1,10 @@
 import LOCChangeProcessor from "./processors/LOCChangedProcessor";
 import ReleaseCandidatesProcessor from "./processors/ReleaseCandidatesProcessor";
 import LOCLanguagesProcessor from "./processors/LOCLanguagesProcessor";
-import { AvailableProcessorEnum } from "./types";
+import { AvailableProcessorEnum, Processor } from "./types";
 import { fetchConfig } from "@/scripts/projectConfig";
 
-export function buildProcessor(processorName: string, projectName: string) {
+export function buildProcessor(processorName: string, projectName: string): Processor {
   const projectConfig = fetchConfig();
 
   switch (processorName) {
