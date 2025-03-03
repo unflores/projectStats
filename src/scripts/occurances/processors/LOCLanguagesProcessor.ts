@@ -2,6 +2,7 @@ import { AvailableAnalysisEnum, Processor } from "../types";
 import * as util from "util";
 import { exec, execSync } from "child_process";
 import moment from "moment";
+import CommandLine from "../CommandLine";
 
 export const asyncExec = util.promisify(exec);
 
@@ -9,18 +10,15 @@ const mainBranchNames = ["main", "master"];
 
 // extract commitsTraverser
 class LOCLanguagesProcessor implements Processor {
-  absPath: string;
+  commandLine: CommandLine;
   languageRegexes: { language: string; regex: string | undefined }[];
-  projectDir: string;
   mainBranchName: string | undefined;
 
   constructor(
-    absPath: string,
-    projectDir: string,
+    commandLine: CommandLine,
     languageRegexes: { language: string; regex: string | undefined }[]
   ) {
-    this.absPath = absPath;
-    this.projectDir = projectDir;
+    this.commandLine = commandLine;
     this.languageRegexes = languageRegexes;
   }
 
@@ -38,13 +36,11 @@ class LOCLanguagesProcessor implements Processor {
   }
 
   async cleanup() {
-    execSync(`git -C ${this.absPath} checkout ${this.mainBranchName}`);
+    this.commandLine.checkoutBranch(this.mainBranchName || "main");
   }
 
   async buildOccurances() {
-    const currentBranchName = execSync(`git -C ${this.absPath} ${this.command("branchName")}`)
-      .toString()
-      .trim();
+    const currentBranchName = this.commandLine.getBranchName();
 
     if (!mainBranchNames.includes(currentBranchName)) {
       // All stats should come from the main branch, otherwise data will be inconsistent
@@ -56,35 +52,21 @@ class LOCLanguagesProcessor implements Processor {
     }
     this.mainBranchName = currentBranchName;
 
-    const commitsResponse = await asyncExec(
-      `git -C ${this.absPath} ${this.command("commits")}`,
-      { maxBuffer: 10 * 1024 * 1024 } // Bad temp idea
-    );
-
-    // Todo, give commits array a commit hash and a time so the occurance can be properly stored
-    const commits = commitsResponse.stdout
-      .toString()
-      .trim()
-      .split("\n")
-      .map((line) => {
-        const [first, ...rest] = line.split(" ");
-        return { hash: first, createdAt: rest.join(" ") };
-      });
+    const commits = this.commandLine.getCommits();
 
     let commitsTraversed = 0;
     const occurances: { occurredAt: string; amount: number; id: string; type: string }[] = [];
     try {
       while (commitsTraversed <= commits.length) {
         const commit = commits[commitsTraversed];
-        execSync(`git -C ${this.absPath} checkout ${commit.hash}`);
-        const locResponse = execSync(this.command("findLoc"));
+        this.commandLine.checkoutBranch(commit.hash);
 
-        const loc = locResponse.toString().trim().split("\n");
+        const loc = this.commandLine.getLoc("*.ts*");
 
         occurances.push({
           type: AvailableAnalysisEnum.LOCLanguage,
           id: commit.hash,
-          amount: parseInt(loc[0]),
+          amount: loc,
           occurredAt: moment(commit.createdAt).toISOString(),
         });
 

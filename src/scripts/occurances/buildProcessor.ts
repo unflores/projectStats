@@ -3,6 +3,7 @@ import ReleaseCandidatesProcessor from "./processors/ReleaseCandidatesProcessor"
 import LOCLanguagesProcessor from "./processors/LOCLanguagesProcessor";
 import { AvailableProcessorEnum, Processor } from "./types";
 import { fetchConfig } from "@/scripts/projectConfig";
+import CommandLine from "./CommandLine";
 
 export function buildProcessor(processorName: string, projectName: string): Processor {
   const projectConfig = fetchConfig();
@@ -34,8 +35,7 @@ export function buildProcessor(processorName: string, projectName: string): Proc
       }
 
       return new LOCLanguagesProcessor(
-        gitConfig.absDirectory,
-        projectConfig.projectDir(projectName),
+        new CommandLine(gitConfig.absDirectory, projectConfig.projectDir(projectName)),
         languageRegexes
       );
     }
