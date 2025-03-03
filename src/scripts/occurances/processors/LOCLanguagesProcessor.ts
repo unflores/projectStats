@@ -1,6 +1,7 @@
 import { AvailableAnalysisEnum, Processor } from "../types";
 import * as util from "util";
 import { exec, execSync } from "child_process";
+import moment from "moment";
 
 export const asyncExec = util.promisify(exec);
 
@@ -27,10 +28,10 @@ class LOCLanguagesProcessor implements Processor {
     return [AvailableAnalysisEnum.LOCLanguage];
   }
 
-  command(command: "branchName" | "loc" | "findLoc") {
+  command(command: "branchName" | "commits" | "findLoc") {
     const commands = {
       branchName: "rev-parse --abbrev-ref HEAD",
-      loc: "log --pretty=oneline --no-merges | awk -F\" \" '{print $1}'",
+      commits: 'log --format="%H %ai"',
       findLoc: `find ${this.absPath}/${this.projectDir} -name '*.ts*' | xargs wc -l | tail -n1 | awk '{print $1}'`,
     };
     return commands[command];
@@ -45,40 +46,56 @@ class LOCLanguagesProcessor implements Processor {
       .toString()
       .trim();
 
-    // if (!mainBranchNames.includes(currentBranchName)) {
-    //   // This sucks so much, make a common Application error class to handle this.
-    //   throw new Error(`The repo is not on the main branch, change it from ${currentBranchName}`);
-    // }
+    if (!mainBranchNames.includes(currentBranchName)) {
+      // All stats should come from the main branch, otherwise data will be inconsistent
+      // as you can rebase and squash etc on a feature branch but the main history _should_ be
+      // stable and consistent.
+
+      // This error should be defined higher up the chain and passed in.
+      throw new Error(`The repo is not on the main branch, change it from ${currentBranchName}`);
+    }
     this.mainBranchName = currentBranchName;
 
     const commitsResponse = await asyncExec(
-      `git -C ${this.absPath} ${this.command("loc")}`,
+      `git -C ${this.absPath} ${this.command("commits")}`,
       { maxBuffer: 10 * 1024 * 1024 } // Bad temp idea
     );
-    const commits = commitsResponse.stdout.toString().trim().split("\n");
 
-    const commitsTraversed = 0;
+    // Todo, give commits array a commit hash and a time so the occurance can be properly stored
+    const commits = commitsResponse.stdout
+      .toString()
+      .trim()
+      .split("\n")
+      .map((line) => {
+        const [first, ...rest] = line.split(" ");
+        return { hash: first, createdAt: rest.join(" ") };
+      });
+
+    let commitsTraversed = 0;
+    const occurances: { occurredAt: string; amount: number; id: string; type: string }[] = [];
     try {
       while (commitsTraversed <= commits.length) {
-        const commitHash = commits[commitsTraversed];
-        execSync(`git -C ${this.absPath} checkout ${commitHash}`);
+        const commit = commits[commitsTraversed];
+        execSync(`git -C ${this.absPath} checkout ${commit.hash}`);
         const locResponse = execSync(this.command("findLoc"));
 
         const loc = locResponse.toString().trim().split("\n");
 
-        // add to occurances
-        // increment commitsTraversed
+        occurances.push({
+          type: AvailableAnalysisEnum.LOCLanguage,
+          id: commit.hash,
+          amount: parseInt(loc[0]),
+          occurredAt: moment(commit.createdAt).toISOString(),
+        });
+
+        commitsTraversed += 10;
       }
     } catch (error) {
       console.error(error);
-      // this doesn't work for ctrl + c, it must be in process.on
-      execSync(`git -C ${this.absPath} checkout ${mainBranchName}`);
-    } finally {
-      // Ensure we always return to the main branch, even if interrupted
-      execSync(`git -C ${this.absPath} checkout ${mainBranchName}`);
+      await this.cleanup();
     }
-    execSync(`git -C ${this.absPath} checkout ${mainBranchName}`);
-    return [];
+    await this.cleanup();
+    return occurances;
   }
 }
 

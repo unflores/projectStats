@@ -1,6 +1,6 @@
 import { AnalysisEnum } from "@/lib/analyses";
 export interface Processor {
-  buildOccurances(): Promise<{ occurredAt: string; id: string; type: string }[]>;
+  buildOccurances(): Promise<{ occurredAt: string; amount: number; id: string; type: string }[]>;
   cleanup?(): Promise<void>;
   analyses(): AvailableAnalysisEnum[];
 }
