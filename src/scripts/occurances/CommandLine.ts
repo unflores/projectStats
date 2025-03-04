@@ -9,7 +9,7 @@ class CommandLine {
     this.projectDir = projectDir;
   }
 
-  checkoutBranch(branchName: string) {
+  checkout(branchName: string) {
     this.git(`checkout ${branchName}`);
   }
 

@@ -1,14 +1,8 @@
 import { AvailableAnalysisEnum, Processor } from "../types";
-import * as util from "util";
-import { exec, execSync } from "child_process";
 import moment from "moment";
 import CommandLine from "../CommandLine";
 
-export const asyncExec = util.promisify(exec);
-
 const mainBranchNames = ["main", "master"];
-
-// extract commitsTraverser
 class LOCLanguagesProcessor implements Processor {
   commandLine: CommandLine;
   languageRegexes: { language: string; regex: string | undefined }[];
@@ -26,17 +20,8 @@ class LOCLanguagesProcessor implements Processor {
     return [AvailableAnalysisEnum.LOCLanguage];
   }
 
-  command(command: "branchName" | "commits" | "findLoc") {
-    const commands = {
-      branchName: "rev-parse --abbrev-ref HEAD",
-      commits: 'log --format="%H %ai"',
-      findLoc: `find ${this.absPath}/${this.projectDir} -name '*.ts*' | xargs wc -l | tail -n1 | awk '{print $1}'`,
-    };
-    return commands[command];
-  }
-
   async cleanup() {
-    this.commandLine.checkoutBranch(this.mainBranchName || "main");
+    this.commandLine.checkout(this.mainBranchName || "main");
   }
 
   async buildOccurances() {
@@ -59,7 +44,7 @@ class LOCLanguagesProcessor implements Processor {
     try {
       while (commitsTraversed <= commits.length) {
         const commit = commits[commitsTraversed];
-        this.commandLine.checkoutBranch(commit.hash);
+        this.commandLine.checkout(commit.hash);
 
         const loc = this.commandLine.getLoc("*.ts*");
 

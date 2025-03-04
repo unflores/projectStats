@@ -14,11 +14,11 @@ describe("CommandLine", () => {
     commandLine = new CommandLine("/abs/path", "project-dir");
   });
 
-  describe("checkoutBranch", () => {
+  describe("checkout", () => {
     it("injects the variables to git", () => {
       mockExecSync.mockReturnValue(Buffer.from(""));
 
-      commandLine.checkoutBranch("feature-branch");
+      commandLine.checkout("feature-branch");
 
       expect(mockExecSync).toHaveBeenCalledWith("git -C /abs/path checkout feature-branch");
     });
