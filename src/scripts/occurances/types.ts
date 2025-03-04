@@ -1,7 +1,10 @@
 import { AnalysisEnum } from "@/lib/analyses";
 export interface Processor {
+  /** Build the occurances from some event in the history in the project */
   buildOccurances(): Promise<{ occurredAt: string; amount: number; id: string; type: string }[]>;
+  /** Clean up the state of the project */
   cleanup?(): Promise<void>;
+  /** The analyses that the processor supports */
   analyses(): AvailableAnalysisEnum[];
 }
 
