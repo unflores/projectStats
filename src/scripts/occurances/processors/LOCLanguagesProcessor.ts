@@ -3,6 +3,11 @@ import moment from "moment";
 import CommandLine from "../CommandLine";
 
 const mainBranchNames = ["main", "master"];
+
+/** TODO:
+ * Add a way to get one value per day. This will give semi idempotent data.
+ * As long as the timestamps are in order, the numbers should stay the same.
+ */
 class LOCLanguagesProcessor implements Processor {
   commandLine: CommandLine;
   languageRegexes: { language: string; regex: string | undefined }[];
