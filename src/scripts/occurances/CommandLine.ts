@@ -29,8 +29,10 @@ class CommandLine {
   }
 
   getLoc(fileRegex: string) {
+    // xargs will limit what it takes and thus we will end up with more than one line for total loc
+    // for projects with a lot of files. This is fixed by using grep total and then summing those.
     const loc = this.run(
-      `find ${this.absPath}/${this.projectDir} -name '${fileRegex}' | xargs wc -l | tail -n1 | awk '{print $1}'`
+      `find ${this.absPath}/${this.projectDir} -name '${fileRegex}' | xargs wc -l|grep total| awk '{sum += $1} END {print sum}'`
     )
       .toString()
       .trim()
