@@ -10,13 +10,10 @@ const mainBranchNames = ["main", "master"];
  */
 class LOCLanguagesProcessor implements Processor {
   commandLine: CommandLine;
-  languageRegexes: { language: string; regex: string | undefined }[];
+  languageRegexes: { language: string; regex: string }[];
   mainBranchName: string | undefined;
 
-  constructor(
-    commandLine: CommandLine,
-    languageRegexes: { language: string; regex: string | undefined }[]
-  ) {
+  constructor(commandLine: CommandLine, languageRegexes: { language: string; regex: string }[]) {
     this.commandLine = commandLine;
     this.languageRegexes = languageRegexes;
   }
@@ -45,19 +42,28 @@ class LOCLanguagesProcessor implements Processor {
     const commits = this.commandLine.getCommits();
 
     let commitsTraversed = 0;
-    const occurances: { occurredAt: string; amount: number; id: string; type: string }[] = [];
+    const occurances: {
+      occurredAt: string;
+      amount: number;
+      id: string;
+      type: string;
+      section: string;
+    }[] = [];
+
     try {
       while (commitsTraversed <= commits.length) {
         const commit = commits[commitsTraversed];
         this.commandLine.checkout(commit.hash);
 
-        const loc = this.commandLine.getLoc("*.ts*");
-
-        occurances.push({
-          type: AvailableAnalysisEnum.LOCLanguage,
-          id: commit.hash,
-          amount: loc,
-          occurredAt: moment(commit.createdAt).toISOString(),
+        this.languageRegexes.forEach((langRegex) => {
+          const loc = this.commandLine.getLoc(langRegex.regex);
+          occurances.push({
+            type: AvailableAnalysisEnum.LOCLanguage,
+            id: commit.hash,
+            section: langRegex.language,
+            amount: loc,
+            occurredAt: moment(commit.createdAt).toISOString(),
+          });
         });
 
         commitsTraversed += 10;

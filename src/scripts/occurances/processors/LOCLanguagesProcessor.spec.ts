@@ -13,7 +13,9 @@ describe("LOCLanguagesProcessor", () => {
       getCommits: jest.fn(),
       getLoc: jest.fn().mockReturnValue(100),
     } as unknown as CommandLine;
-    processor = new LOCLanguagesProcessor(mockCommandLine, []);
+    processor = new LOCLanguagesProcessor(mockCommandLine, [
+      { language: "typescript", regex: "*.ts" },
+    ]);
   });
 
   it("raises error when not on main branch", async () => {
@@ -40,6 +42,7 @@ describe("LOCLanguagesProcessor", () => {
       type: AvailableAnalysisEnum.LOCLanguage,
       id: "hash0",
       amount: 100,
+      section: "typescript",
       occurredAt: moment(mockCommits[0].createdAt).toISOString(),
     });
 
@@ -47,6 +50,7 @@ describe("LOCLanguagesProcessor", () => {
       type: AvailableAnalysisEnum.LOCLanguage,
       id: "hash10",
       amount: 100,
+      section: "typescript",
       occurredAt: moment(mockCommits[10].createdAt).toISOString(),
     });
   });

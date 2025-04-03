@@ -38,7 +38,7 @@ class CommandLine {
       .trim()
       .split("\n");
 
-    return parseInt(loc[0]);
+    return loc[0] ? parseInt(loc[0]) : 0;
   }
 
   private run(command: string) {

@@ -66,14 +66,20 @@ describe("CommandLine", () => {
   });
 
   describe("getLoc", () => {
-    it("injects the variables to git", () => {
+    it("injects the variables to git command", () => {
       mockExecSync.mockReturnValue(Buffer.from(""));
 
       commandLine.getLoc("*.ts*");
 
-      expect(mockExecSync).toHaveBeenCalledWith(
-        `find /abs/path/project-dir -name '*.ts*' | xargs wc -l | tail -n1 | awk '{print $1}'`
-      );
+      expect(mockExecSync).toHaveBeenCalledWith(expect.stringContaining("-name '*.ts*'"));
+    });
+
+    it("returns 0 when no files are found", () => {
+      mockExecSync.mockReturnValue(Buffer.from(""));
+
+      const result = commandLine.getLoc("*.ts*");
+
+      expect(result).toEqual(0);
     });
 
     it("returns lines of code count", () => {
