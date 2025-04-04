@@ -1,4 +1,4 @@
-import { AvailableProcessorEnum, Processor } from "../types";
+import { AvailableAnalysisEnum, AvailableProcessorEnum, Processor } from "../types";
 import * as util from "util";
 import { exec } from "child_process";
 import moment from "moment";
@@ -14,7 +14,7 @@ class ReleaseCandidatesProcessor implements Processor {
   }
 
   analyses() {
-    return [AvailableProcessorEnum.ReleaseCandidates];
+    return [AvailableAnalysisEnum.ReleaseCandidates];
   }
 
   async buildOccurances() {

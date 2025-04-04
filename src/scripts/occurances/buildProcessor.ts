@@ -1,9 +1,11 @@
 import LOCChangeProcessor from "./processors/LOCChangedProcessor";
 import ReleaseCandidatesProcessor from "./processors/ReleaseCandidatesProcessor";
-import { AvailableProcessorEnum } from "./types";
+import LOCLanguagesProcessor from "./processors/LOCLanguagesProcessor";
+import { AvailableProcessorEnum, Processor } from "./types";
 import { fetchConfig } from "@/scripts/projectConfig";
+import CommandLine from "./CommandLine";
 
-export function buildProcessor(processorName: string, projectName: string) {
+export function buildProcessor(processorName: string, projectName: string): Processor {
   const projectConfig = fetchConfig();
 
   switch (processorName) {
@@ -24,6 +26,18 @@ export function buildProcessor(processorName: string, projectName: string) {
       }
 
       return new LOCChangeProcessor(gitConfig.absDirectory);
+    }
+    case AvailableProcessorEnum.LOCLanguage: {
+      const gitConfig = projectConfig.git(projectName);
+      const languageRegexes = projectConfig.languageRegexes(projectName);
+      if (gitConfig === undefined) {
+        throw new Error(`Project ${projectName} has no git config`);
+      }
+
+      return new LOCLanguagesProcessor(
+        new CommandLine(gitConfig.absDirectory, projectConfig.projectDir(projectName)),
+        languageRegexes
+      );
     }
     default:
       throw new Error(`Processor ${processorName} not found`);
