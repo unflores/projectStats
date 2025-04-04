@@ -1,4 +1,3 @@
-import logger from "@/lib/logger";
 import { execSync } from "child_process";
 
 class CommandLine {
