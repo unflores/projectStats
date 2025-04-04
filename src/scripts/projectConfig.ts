@@ -34,16 +34,16 @@ class ProjectConfig {
     return this.config[projectName]?.git;
   }
 
-  languageRegexes(projectName: string): { language: string; regex: string }[] {
+  languageRegexes(projectName: string): { language: string; glob: string }[] {
     return (this.config[projectName]?.languages || [])
       .map((language) => {
         if (language === "typescript") {
-          return { language, regex: ".tsx?" };
+          return { language, glob: "*.tsx*" };
         } else if (language === "ruby") {
-          return { language, regex: ".rb" };
+          return { language, glob: "*.rb" };
         }
       })
-      .filter((item): item is { language: string; regex: string } => item !== undefined);
+      .filter((item): item is { language: string; glob: string } => item !== undefined);
   }
 
   projectDir(projectName: string) {

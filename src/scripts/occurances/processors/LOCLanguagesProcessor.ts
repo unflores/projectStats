@@ -10,12 +10,12 @@ const mainBranchNames = ["main", "master"];
  */
 class LOCLanguagesProcessor implements Processor {
   commandLine: CommandLine;
-  languageRegexes: { language: string; regex: string }[];
+  languageGlobs: { language: string; glob: string }[];
   mainBranchName: string | undefined;
 
-  constructor(commandLine: CommandLine, languageRegexes: { language: string; regex: string }[]) {
+  constructor(commandLine: CommandLine, languageGlobs: { language: string; glob: string }[]) {
     this.commandLine = commandLine;
-    this.languageRegexes = languageRegexes;
+    this.languageGlobs = languageGlobs;
   }
 
   analyses() {
@@ -55,12 +55,12 @@ class LOCLanguagesProcessor implements Processor {
         const commit = commits[commitsTraversed];
         this.commandLine.checkout(commit.hash);
 
-        this.languageRegexes.forEach((langRegex) => {
-          const loc = this.commandLine.getLoc(langRegex.regex);
+        this.languageGlobs.forEach((langGlob) => {
+          const loc = this.commandLine.getLoc(langGlob.glob);
           occurances.push({
             type: AvailableAnalysisEnum.LOCLanguage,
             id: commit.hash,
-            section: langRegex.language,
+            section: langGlob.language,
             amount: loc,
             occurredAt: moment(commit.createdAt).toISOString(),
           });
